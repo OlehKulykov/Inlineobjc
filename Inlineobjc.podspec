@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.version      = "0.1.4"
   s.summary      = "Inline Objective-C small functions"
   s.description  = <<-DESC
-Inline Objective-C small functions
+Inline Objective-C small functions.
                       DESC
   s.homepage     = "https://github.com/OlehKulykov/Inlineobjc"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
