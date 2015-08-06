@@ -23,13 +23,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "UIImage+Inlineobjc.h"
+#import "NSDictionary+Inlineobjc.h"
 
-@interface UIImage_Inlineobjc : XCTestCase
+@interface NSDictionary_Inlineobjc : XCTestCase
 
 @end
 
-@implementation UIImage_Inlineobjc
+@implementation NSDictionary_Inlineobjc
 
 - (void)setUp
 {
@@ -45,11 +45,32 @@
 
 - (void)testExample
 {
+	NSDictionary * src = @{ @"key1" : @"value",
+							@"key2" : @(1),
+							@"key3" : @(YES),
+							@"key4" : @(NO),
+							@"key5" : @[ @"value1", @"value2", @(5) ],
+							@"key6" : @{ @"key1" : @(5) }
+							};
+
 	// This is an example of a functional test case.
-	XCTAssert(UIImageCreateWithColorAndSize([UIColor redColor], CGSizeMake(1, 1)) != nil, @"ERROR UIImageCreateWithColorAndSize");
-	XCTAssert(UIImageCreateWithColorAndSize([UIColor redColor], CGSizeMake(0, 0)) == nil , @"ERROR UIImageCreateWithColorAndSize");
-	XCTAssert(UIImageCreateWithColorAndSize(nil, CGSizeMake(1, 2)) == nil, @"ERROR UIImageCreateWithColorAndSize");
-	XCTAssert(UIImageCreateWithColorAndSize([UIColor redColor], CGSizeMake(2, -1)) == nil, @"ERROR UIImageCreateWithColorAndSize");
+	XCTAssert(NSDictionaryGetPropertyListData(nil) == nil, @"ERROR NSDictionaryGetPropertyListData");
+	XCTAssert(NSDictionaryGetPropertyListData(@{}) != nil, @"ERROR NSDictionaryGetPropertyListData");
+	XCTAssert(NSDictionaryGetPropertyListData(src) != nil, @"ERROR NSDictionaryGetPropertyListData");
+
+
+	XCTAssert(NSDictionaryGetBinaryPropertyListData(nil) == nil, @"ERROR NSDictionaryGetBinaryPropertyListData");
+	XCTAssert(NSDictionaryGetBinaryPropertyListData(@{}) != nil, @"ERROR NSDictionaryGetBinaryPropertyListData");
+	XCTAssert(NSDictionaryGetBinaryPropertyListData(src) != nil, @"ERROR NSDictionaryGetBinaryPropertyListData");
+
+	NSData * data = NSDictionaryGetPropertyListData(src);
+	NSDictionary * dst1 = NSDictionaryCreateWithPropertyListData(data);
+	XCTAssert([dst1 isEqualToDictionary:src], @"ERROR NSDictionaryGetPropertyListData >> NSDictionaryCreateWithPropertyListData");
+
+
+	data = NSDictionaryGetBinaryPropertyListData(src);
+	dst1 = NSDictionaryCreateWithPropertyListData(data);
+	XCTAssert([dst1 isEqualToDictionary:src], @"ERROR NSDictionaryGetBinaryPropertyListData >> NSDictionaryCreateWithPropertyListData");
 }
 
 - (void)testPerformanceExample

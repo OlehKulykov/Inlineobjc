@@ -23,13 +23,13 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "UIImage+Inlineobjc.h"
+#import "NSData+Inlineobjc.h"
 
-@interface UIImage_Inlineobjc : XCTestCase
+@interface NSData_Inlineobjc : XCTestCase
 
 @end
 
-@implementation UIImage_Inlineobjc
+@implementation NSData_Inlineobjc
 
 - (void)setUp
 {
@@ -46,10 +46,20 @@
 - (void)testExample
 {
 	// This is an example of a functional test case.
-	XCTAssert(UIImageCreateWithColorAndSize([UIColor redColor], CGSizeMake(1, 1)) != nil, @"ERROR UIImageCreateWithColorAndSize");
-	XCTAssert(UIImageCreateWithColorAndSize([UIColor redColor], CGSizeMake(0, 0)) == nil , @"ERROR UIImageCreateWithColorAndSize");
-	XCTAssert(UIImageCreateWithColorAndSize(nil, CGSizeMake(1, 2)) == nil, @"ERROR UIImageCreateWithColorAndSize");
-	XCTAssert(UIImageCreateWithColorAndSize([UIColor redColor], CGSizeMake(2, -1)) == nil, @"ERROR UIImageCreateWithColorAndSize");
+
+	NSString * srcString = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+	srcString = [srcString stringByAppendingString:@"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."];
+
+	NSData * src1 = [NSData dataWithBytes:[srcString UTF8String] length:[srcString lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
+	XCTAssert(src1 != nil, @"ERROR internal");
+
+	NSData * dst1 = NSDataGetZipCompressDataWithRatio(src1, 1);
+	XCTAssert(dst1 != nil, @"ERROR NSDataGetZipCompressDataWithRatio");
+
+	NSData * dst2 = NSDataGetZipDecompressData(dst1);
+	XCTAssert(dst2 != nil, @"ERROR NSDataGetZipDecompressData");
+
+	XCTAssert([src1 isEqualToData:dst2], @"ERROR NSDataGetZipDecompressData");
 }
 
 - (void)testPerformanceExample
