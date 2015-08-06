@@ -122,3 +122,22 @@ NS_INLINE BOOL NSStringIsContainesSubstring(NSString * sourceString, NSString * 
 	return NO;
 }
 
+
+/**
+ @brief Check strings are not empty and equal.
+ @param string1 The test string object.
+ @param string2 The test string object.
+ @return YES string are not nil and equal.
+ */
+NS_INLINE BOOL NSStringsAreEqual(NSString * string1, NSString * string2)
+{
+#if defined(DEBUG)
+	if (string1 && string2)
+	{
+		assert([string1 isKindOfClass:[NSString class]]);
+		assert([string2 isKindOfClass:[NSString class]]);
+	}
+#endif
+	return (string1 && string2) ? [string1 isEqualToString:string2] : NO;
+}
+

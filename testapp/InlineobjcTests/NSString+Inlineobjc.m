@@ -61,6 +61,13 @@
 	XCTAssert(!NSStringIsContainesSubstring(@"", @""), @"ERROR NSStringIsContainesSubstring");
 	XCTAssert(!NSStringIsContainesSubstring(@"This is an example", nil), @"ERROR NSStringIsContainesSubstring");
 	XCTAssert(!NSStringIsContainesSubstring(@"This is an example", @""), @"ERROR NSStringIsContainesSubstring");
+
+	XCTAssert(NSStringsAreEqual(@"", @""), @"ERROR NSStringsAreEqual");
+	XCTAssert(NSStringsAreEqual(@"a", @"a"), @"ERROR NSStringsAreEqual");
+	XCTAssert(!NSStringsAreEqual(@"a", @"b"), @"ERROR NSStringsAreEqual");
+	XCTAssert(!NSStringsAreEqual(@"", @"a"), @"ERROR NSStringsAreEqual");
+	XCTAssert(!NSStringsAreEqual(@"", nil), @"ERROR NSStringsAreEqual");
+	XCTAssert(!NSStringsAreEqual(nil, @""), @"ERROR NSStringsAreEqual");
 }
 
 - (void)testPerformanceExample
