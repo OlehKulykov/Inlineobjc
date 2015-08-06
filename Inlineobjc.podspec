@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 # Common settings
   s.name         = "Inlineobjc"
-  s.version      = "0.1.0"
+  s.version      = "0.1.1"
   s.summary      = "Inline Objective-C small functions"
   s.description  = <<-DESC
 Inline Objective-C small functions
@@ -13,16 +13,16 @@ Inline Objective-C small functions
   s.source       = { :git => 'https://github.com/OlehKulykov/Inlineobjc.git', :tag => s.version.to_s, :submodules => "true" }
 
 # Platforms
-  s.ios.deployment_target = "5.0"
+  s.ios.deployment_target = "6.0"
 
 # Build  
-  s.public_header_files = 'UIColor+Inlineobjc.h',
-	'UIImage+Inlineobjc.h',
-	'NSData+Inlineobjc.h', 
-	'NSData+InlineobjcZip.h',
-	'NSDictionary+Inlineobjc.h',
-	'NSMutableArray+Inlineobjc.h',
-	'NSString+Inlineobjc.h'
+  s.public_header_files = 'UIImage_Inlineobjc.h',
+	'UIColor_Inlineobjc.h',
+	'NSData_Inlineobjc.h', 
+	'NSData_InlineobjcZip.h',
+	'NSDictionary_Inlineobjc.h',
+	'NSMutableArray_Inlineobjc.h',
+	'NSString_Inlineobjc.h'
   s.source_files = 'InlineobjcDummy.m'
   s.requires_arc = true
 

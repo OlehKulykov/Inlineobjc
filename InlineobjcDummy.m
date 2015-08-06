@@ -21,13 +21,13 @@
  */
 
 
-#import "UIColor+Inlineobjc.h"
-#import "UIImage+Inlineobjc.h"
-#import "NSData+Inlineobjc.h"
-#import "NSData+InlineobjcZip.h"
-#import "NSDictionary+Inlineobjc.h"
-#import "NSMutableArray+Inlineobjc.h"
-#import "NSString+Inlineobjc.h"
+#import "UIColor_Inlineobjc.h"
+#import "UIImage_Inlineobjc.h"
+#import "NSData_Inlineobjc.h"
+#import "NSData_InlineobjcZip.h"
+#import "NSDictionary_Inlineobjc.h"
+#import "NSMutableArray_Inlineobjc.h"
+#import "NSString_Inlineobjc.h"
 
 
 @interface InlineobjcDummy : NSObject

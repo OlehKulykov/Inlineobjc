@@ -23,7 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "NSDictionary+Inlineobjc.h"
+#import "NSDictionary_Inlineobjc.h"
 
 @interface NSDictionary_Inlineobjc : XCTestCase
 

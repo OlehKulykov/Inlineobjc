@@ -36,18 +36,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D1588061B733EC700C659DA /* NSMutableArray+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+Inlineobjc.h"; path = "../../NSMutableArray+Inlineobjc.h"; sourceTree = "<group>"; };
-		3D1588071B73583D00C659DA /* NSString+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSString+Inlineobjc.h"; path = "../../NSString+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D1588061B733EC700C659DA /* NSMutableArray_Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSMutableArray_Inlineobjc.h; path = ../../NSMutableArray_Inlineobjc.h; sourceTree = "<group>"; };
+		3D1588071B73583D00C659DA /* NSString_Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSString_Inlineobjc.h; path = ../../NSString_Inlineobjc.h; sourceTree = "<group>"; };
 		3D1588081B7358E900C659DA /* NSString+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D15880A1B735E6100C659DA /* UIImage+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIImage+Inlineobjc.h"; path = "../../UIImage+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D15880A1B735E6100C659DA /* UIImage_Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UIImage_Inlineobjc.h; path = ../../UIImage_Inlineobjc.h; sourceTree = "<group>"; };
 		3D15880B1B735EB000C659DA /* UIImage+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D15880D1B7362B200C659DA /* NSDictionary+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+Inlineobjc.h"; path = "../../NSDictionary+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D15880D1B7362B200C659DA /* NSDictionary_Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSDictionary_Inlineobjc.h; path = ../../NSDictionary_Inlineobjc.h; sourceTree = "<group>"; };
 		3D15880E1B73637400C659DA /* NSDictionary+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D1588101B7366F900C659DA /* NSData+InlineobjcZip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+InlineobjcZip.h"; path = "../../NSData+InlineobjcZip.h"; sourceTree = "<group>"; };
+		3D1588101B7366F900C659DA /* NSData_InlineobjcZip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSData_InlineobjcZip.h; path = ../../NSData_InlineobjcZip.h; sourceTree = "<group>"; };
 		3D1588111B73679A00C659DA /* NSData+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D1588131B7367C700C659DA /* NSData+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+Inlineobjc.h"; path = "../../NSData+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D1588131B7367C700C659DA /* NSData_Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSData_Inlineobjc.h; path = ../../NSData_Inlineobjc.h; sourceTree = "<group>"; };
 		3D1588141B736A6600C659DA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		3D1588161B736F0200C659DA /* UIColor+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+Inlineobjc.h"; path = "../../UIColor+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D1588161B736F0200C659DA /* UIColor_Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UIColor_Inlineobjc.h; path = ../../UIColor_Inlineobjc.h; sourceTree = "<group>"; };
 		3D1588171B736FF000C659DA /* UIColor+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Inlineobjc.m"; sourceTree = "<group>"; };
 		3D1588191B73743E00C659DA /* InlineobjcDummy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InlineobjcDummy.m; path = ../../InlineobjcDummy.m; sourceTree = "<group>"; };
 		3D1FB8781B6B8E27005AE804 /* Inlineobjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inlineobjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,13 +155,13 @@
 		3D1FB8A21B6B8F26005AE804 /* Header */ = {
 			isa = PBXGroup;
 			children = (
-				3D1588161B736F0200C659DA /* UIColor+Inlineobjc.h */,
-				3D1588101B7366F900C659DA /* NSData+InlineobjcZip.h */,
-				3D1588131B7367C700C659DA /* NSData+Inlineobjc.h */,
-				3D15880D1B7362B200C659DA /* NSDictionary+Inlineobjc.h */,
-				3D15880A1B735E6100C659DA /* UIImage+Inlineobjc.h */,
-				3D1588071B73583D00C659DA /* NSString+Inlineobjc.h */,
-				3D1588061B733EC700C659DA /* NSMutableArray+Inlineobjc.h */,
+				3D1588161B736F0200C659DA /* UIColor_Inlineobjc.h */,
+				3D1588101B7366F900C659DA /* NSData_InlineobjcZip.h */,
+				3D1588131B7367C700C659DA /* NSData_Inlineobjc.h */,
+				3D15880D1B7362B200C659DA /* NSDictionary_Inlineobjc.h */,
+				3D15880A1B735E6100C659DA /* UIImage_Inlineobjc.h */,
+				3D1588071B73583D00C659DA /* NSString_Inlineobjc.h */,
+				3D1588061B733EC700C659DA /* NSMutableArray_Inlineobjc.h */,
 				3D1588191B73743E00C659DA /* InlineobjcDummy.m */,
 			);
 			name = Header;
