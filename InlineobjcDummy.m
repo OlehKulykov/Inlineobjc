@@ -22,16 +22,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-
-#import "UIColor_Inlineobjc.h"
-#import "UIImage_Inlineobjc.h"
-#import "NSData_Inlineobjc.h"
-#import "NSData_InlineobjcZip.h"
-#import "NSDictionary_Inlineobjc.h"
-#import "NSMutableArray_Inlineobjc.h"
-#import "NSString_Inlineobjc.h"
-
 
 @interface InlineobjcDummy : NSObject
 
