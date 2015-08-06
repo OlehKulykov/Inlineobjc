@@ -23,7 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "UIColor_Inlineobjc.h"
+#import "UIColor+Inlineobjc.h"
 
 @interface UIColor_Inlineobjc : XCTestCase
 

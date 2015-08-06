@@ -23,6 +23,7 @@
 
 #import <Foundation/Foundation.h>
 
+/*
 @interface InlineobjcDummy : NSObject
 
 @end
@@ -30,4 +31,4 @@
 @implementation InlineobjcDummy
 
 @end
-
+*/

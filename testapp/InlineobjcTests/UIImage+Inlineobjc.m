@@ -23,7 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "UIImage_Inlineobjc.h"
+#import "UIImage+Inlineobjc.h"
 
 @interface UIImage_Inlineobjc : XCTestCase
 

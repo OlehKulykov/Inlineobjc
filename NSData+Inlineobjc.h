@@ -21,6 +21,6 @@
  */
 
 
-#import "NSData_InlineobjcZip.h"
+#import "NSData+InlineobjcZip.h"
 
 

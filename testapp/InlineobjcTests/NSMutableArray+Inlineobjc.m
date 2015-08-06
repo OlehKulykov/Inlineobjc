@@ -23,7 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "NSMutableArray_Inlineobjc.h"
+#import "NSMutableArray+Inlineobjc.h"
 
 @interface NSMutableArray_Inlineobjc : XCTestCase
 

@@ -23,7 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "NSData_Inlineobjc.h"
+#import "NSData+Inlineobjc.h"
 
 @interface NSData_Inlineobjc : XCTestCase
 

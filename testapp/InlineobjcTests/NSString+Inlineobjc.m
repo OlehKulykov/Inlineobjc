@@ -23,7 +23,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "NSString_Inlineobjc.h"
+#import "NSString+Inlineobjc.h"
 
 @interface NSString_Inlineobjc : XCTestCase
 
