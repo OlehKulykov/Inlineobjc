@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 # Common settings
   s.name         = "Inlineobjc"
-  s.version      = "0.1.6"
+  s.version      = "0.1.7"
   s.summary      = "Inline Objective-C small functions"
   s.description  = <<-DESC
 Inline Objective-C small functions. Few usefull daily functions.
@@ -16,14 +16,8 @@ Inline Objective-C small functions. Few usefull daily functions.
   s.platform     = :ios, '7.0'
 
 # Build  
-  s.public_header_files = 'UIImage+Inlineobjc.h',
-	'UIColor+Inlineobjc.h',
-	'NSData+Inlineobjc.h', 
-	'NSData+InlineobjcZip.h',
-	'NSDictionary+Inlineobjc.h',
-	'NSMutableArray+Inlineobjc.h',
-	'NSString+Inlineobjc.h'
-  s.source_files = 'InlineobjcDummy.m'
+  s.source_files = '*.h'
+  s.public_header_files = '*.h'
   s.requires_arc = true
   s.libraries    = 'z'
   s.framework = 'CoreFoundation', 'CoreGraphics'
