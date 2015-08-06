@@ -13,7 +13,8 @@ Inline Objective-C small functions
   s.source       = { :git => 'https://github.com/OlehKulykov/Inlineobjc.git', :tag => s.version.to_s, :submodules => "true" }
 
 # Platforms
-  s.ios.deployment_target = "6.0"
+  s.platform     = :ios, '7.0'
+  s.requires_arc = true
 
 # Build  
   s.public_header_files = 'UIImage_Inlineobjc.h',

@@ -21,6 +21,9 @@
  */
 
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 #import "UIColor_Inlineobjc.h"
 #import "UIImage_Inlineobjc.h"
 #import "NSData_Inlineobjc.h"
