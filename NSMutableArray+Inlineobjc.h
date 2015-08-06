@@ -29,6 +29,13 @@
 #endif
 #endif
 
+
+/**
+ @brief Append(add) some object to the end of the mutable array if it's not already contained.
+ @param array The mutable array object, should NOT be nil.
+ @param object The object for adding to the array, should NOT be nil.
+ @warning This is unsafe function so, all parameters should NOT be nil.
+ */
 NS_INLINE void NSMutableArrayAppendUniqObjectUnsafe(NSMutableArray * array, id object)
 {
 #if defined(DEBUG)
@@ -38,6 +45,13 @@ NS_INLINE void NSMutableArrayAppendUniqObjectUnsafe(NSMutableArray * array, id o
 	if (![array containsObject:object]) [array addObject:object];
 }
 
+
+/**
+ @brief Prepend(add first) some object to the beginning of the mutable array if it's not already contained.
+ @param array The mutable array object, should NOT be nil.
+ @param object The object for adding to the array, should NOT be nil.
+ @warning This is unsafe function so, all parameters should NOT be nil.
+ */
 NS_INLINE void NSMutableArrayPrependUniqObjectUnsafe(NSMutableArray * array, id object)
 {
 #if defined(DEBUG)
@@ -47,6 +61,12 @@ NS_INLINE void NSMutableArrayPrependUniqObjectUnsafe(NSMutableArray * array, id 
 	if (![array containsObject:object]) [array insertObject:object atIndex:0];
 }
 
+
+/**
+ @brief Append(add) some object to the end of the mutable array if it's not already contained.
+ @param array The mutable array object. If array is nil - do nothing.
+ @param object The object for adding to the array. If object is nil - do nothing.
+ */
 NS_INLINE void NSMutableArrayAppendUniqObjectSafe(NSMutableArray * array, id object)
 {
 	if (array && object)
@@ -58,6 +78,12 @@ NS_INLINE void NSMutableArrayAppendUniqObjectSafe(NSMutableArray * array, id obj
 	}
 }
 
+
+/**
+ @brief Append(add) to the end of the mutable array objects from 'NSFastEnumeration' container, of cource if objects not already contained.
+ @param array The mutable array object. If array is nil - do nothing.
+ @param from 'NSFastEnumeration' container objects which append(add) to array. If container is nil - do nothing.
+ */
 NS_INLINE void NSMutableArrayAppendUniqSafe(NSMutableArray * array, id<NSFastEnumeration> from)
 {
 	if (array && from)
@@ -72,6 +98,13 @@ NS_INLINE void NSMutableArrayAppendUniqSafe(NSMutableArray * array, id<NSFastEnu
 	}
 }
 
+
+/**
+ @brief Prepend(add first) some object to the beginning of the mutable array if it's not already contained.
+ @param array The mutable array object. If array is nil - do nothing.
+ @param object The object for adding to the array. If object is nil - do nothing.
+ @warning This is unsafe function so, all parameters should NOT be nil.
+ */
 NS_INLINE void NSMutableArrayPrependUniqObjectSafe(NSMutableArray * array, id object)
 {
 	if (array && object)
@@ -83,6 +116,12 @@ NS_INLINE void NSMutableArrayPrependUniqObjectSafe(NSMutableArray * array, id ob
 	}
 }
 
+
+/**
+ @brief Prepend(add first) to to the beginning of the mutable array objects from 'NSFastEnumeration' container, of cource if objects not already contained.
+ @param array The mutable array object. If array is nil - do nothing.
+ @param from 'NSFastEnumeration' container objects which Prepend(add first) to array. If container is nil - do nothing.
+ */
 NS_INLINE void NSMutableArrayPrependUniqSafe(NSMutableArray * array, id<NSFastEnumeration> from)
 {
 	if (array && from)

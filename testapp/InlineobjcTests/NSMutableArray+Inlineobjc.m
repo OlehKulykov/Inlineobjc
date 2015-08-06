@@ -32,36 +32,70 @@
 {
 	// This is an example of a functional test case.
 
-
-	NSMutableArray * arrayA = [NSMutableArray array];
-	NSMutableArray * arrayP = [NSMutableArray array];
-	for (int i = 0; i < 4; i++)
+	// NSMutableArrayAppendUniqObjectUnsafe
+	NSMutableArray * dst1 = [NSMutableArray array];
+	NSMutableArray * dst2 = [NSMutableArray array];
+	for (id obj in @[ @(-2), @(-1), @(0), @(1), @(2) ])
 	{
-		NSMutableArrayAppendUniqObjectUnsafe(arrayA, @(i));
-		NSMutableArrayPrependUniqObjectUnsafe(arrayP, @(i));
+		NSMutableArrayAppendUniqObjectUnsafe(dst1, obj);
+		NSMutableArrayAppendUniqObjectSafe(dst2, obj);
 	}
-	XCTAssert([arrayA count] == 4, @"Append all uniq: Pass");
-	XCTAssert([arrayP count] == 4, @"Prepend all uniq: Pass");
-	[arrayA removeAllObjects];
-	[arrayP removeAllObjects];
+	BOOL res = [dst1 isEqualToArray:@[@(-2), @(-1), @(0), @(1), @(2)]];
+	XCTAssert(res, @"ERROR NSMutableArrayAppendUniqObjectUnsafe");
+	XCTAssert([dst1 isEqualToArray:dst2], @"ERROR NSMutableArrayAppendUniqObjectSafe");
+	[dst1 removeAllObjects];
+	[dst2 removeAllObjects];
 
-
-	for (int i = 0; i < 4; i++)
+	for (id obj in @[ @(-1), @(-1), @(0), @(1), @(2) ])
 	{
-		NSMutableArrayAppendUniqObjectUnsafe(arrayA, @(i));
-		NSMutableArrayAppendUniqObjectUnsafe(arrayA, @(i - 1));
-
-		NSMutableArrayPrependUniqObjectUnsafe(arrayP, @(i));
-		NSMutableArrayPrependUniqObjectUnsafe(arrayP, @(i - 1));
+		NSMutableArrayAppendUniqObjectUnsafe(dst1, obj);
+		NSMutableArrayAppendUniqObjectSafe(dst2, obj);
 	}
-	// 5 with '-1' value
-	XCTAssert([arrayA count] == 5, @"Append uniq and prev uniq: Pass");
-	XCTAssert([arrayP count] == 5, @"Prepend uniq and prev uniq: Pass");
-	[arrayA removeAllObjects];
-	[arrayP removeAllObjects];
+	res = [dst1 isEqualToArray:@[@(-1), @(0), @(1), @(2)]];
+	XCTAssert(res, @"ERROR NSMutableArrayAppendUniqObjectUnsafe");
+	XCTAssert([dst1 isEqualToArray:dst2], @"ERROR NSMutableArrayAppendUniqObjectSafe");
+	[dst1 removeAllObjects];
+	[dst2 removeAllObjects];
 
 
-	XCTAssert(YES, @"Pass");
+	// NSMutableArrayPrependUniqObjectUnsafe
+	for (id obj in @[ @(-2), @(-1), @(0), @(1), @(2) ])
+	{
+		NSMutableArrayPrependUniqObjectUnsafe(dst1, obj);
+		NSMutableArrayPrependUniqObjectSafe(dst2, obj);
+	}
+	res = [dst1 isEqualToArray:@[@(2), @(1), @(0), @(-1), @(-2)]];
+	XCTAssert(res, @"ERROR NSMutableArrayPrependUniqObjectUnsafe");
+	XCTAssert([dst1 isEqualToArray:dst2], @"ERROR NSMutableArrayPrependUniqObjectSafe");
+	[dst1 removeAllObjects];
+	[dst2 removeAllObjects];
+
+	for (id obj in @[ @(-1), @(-1), @(0), @(1), @(2) ])
+	{
+		NSMutableArrayPrependUniqObjectUnsafe(dst1, obj);
+		NSMutableArrayPrependUniqObjectSafe(dst2, obj);
+	}
+	res = [dst1 isEqualToArray:@[@(2), @(1), @(0), @(-1)]];
+	XCTAssert(res, @"ERROR NSMutableArrayPrependUniqObjectUnsafe");
+	XCTAssert([dst1 isEqualToArray:dst2], @"ERROR NSMutableArrayPrependUniqObjectSafe");
+	[dst1 removeAllObjects];
+	[dst2 removeAllObjects];
+
+
+	// NSMutableArrayAppendUniqSafe
+	// NSMutableArrayPrependUniqSafe
+
+	NSMutableArrayAppendUniqSafe(dst1, @[ @(-1), @(-1), @(0), @(1), @(2) ]);
+	res = [dst1 isEqualToArray:@[@(-1), @(0), @(1), @(2)]];
+	XCTAssert(res, @"ERROR NSMutableArrayAppendUniqSafe");
+
+
+	NSMutableArrayPrependUniqSafe(dst2, @[ @(-1), @(-1), @(0), @(1), @(2) ]);
+	res = [dst2 isEqualToArray:@[@(2), @(1), @(0), @(-1)]];
+	XCTAssert(res, @"ERROR NSMutableArrayAppendUniqSafe");
+
+	[dst1 removeAllObjects];
+	[dst2 removeAllObjects];
 }
 
 - (void)testPerformanceExample
