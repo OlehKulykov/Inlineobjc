@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3D1588091B7358E900C659DA /* NSString+Inlineobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1588081B7358E900C659DA /* NSString+Inlineobjc.m */; };
+		3D15880C1B735EB000C659DA /* UIImage+Inlineobjc.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D15880B1B735EB000C659DA /* UIImage+Inlineobjc.m */; };
 		3D1FB87E1B6B8E27005AE804 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1FB87D1B6B8E27005AE804 /* main.m */; };
 		3D1FB8811B6B8E27005AE804 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1FB8801B6B8E27005AE804 /* AppDelegate.m */; };
 		3D1FB8841B6B8E27005AE804 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1FB8831B6B8E27005AE804 /* ViewController.m */; };
@@ -32,6 +33,8 @@
 		3D1588061B733EC700C659DA /* NSMutableArray+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+Inlineobjc.h"; path = "../../NSMutableArray+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D1588071B73583D00C659DA /* NSString+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSString+Inlineobjc.h"; path = "../../NSString+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D1588081B7358E900C659DA /* NSString+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Inlineobjc.m"; sourceTree = "<group>"; };
+		3D15880A1B735E6100C659DA /* UIImage+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIImage+Inlineobjc.h"; path = "../../UIImage+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D15880B1B735EB000C659DA /* UIImage+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Inlineobjc.m"; sourceTree = "<group>"; };
 		3D1FB8781B6B8E27005AE804 /* Inlineobjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inlineobjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1FB87C1B6B8E27005AE804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D1FB87D1B6B8E27005AE804 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 		3D1FB8941B6B8E27005AE804 /* InlineobjcTests */ = {
 			isa = PBXGroup;
 			children = (
+				3D15880B1B735EB000C659DA /* UIImage+Inlineobjc.m */,
 				3D1588081B7358E900C659DA /* NSString+Inlineobjc.m */,
 				3D1FB8A31B6B9FC8005AE804 /* NSMutableArray+Inlineobjc.m */,
 				3D1FB8971B6B8E27005AE804 /* InlineobjcTests.m */,
@@ -131,6 +135,7 @@
 		3D1FB8A21B6B8F26005AE804 /* Header */ = {
 			isa = PBXGroup;
 			children = (
+				3D15880A1B735E6100C659DA /* UIImage+Inlineobjc.h */,
 				3D1588071B73583D00C659DA /* NSString+Inlineobjc.h */,
 				3D1588061B733EC700C659DA /* NSMutableArray+Inlineobjc.h */,
 			);
@@ -247,6 +252,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D15880C1B735EB000C659DA /* UIImage+Inlineobjc.m in Sources */,
 				3D1588091B7358E900C659DA /* NSString+Inlineobjc.m in Sources */,
 				3D1FB8A51B6B9FC8005AE804 /* NSMutableArray+Inlineobjc.m in Sources */,
 				3D1FB8981B6B8E27005AE804 /* InlineobjcTests.m in Sources */,
