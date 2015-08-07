@@ -65,6 +65,15 @@
 	XCTAssert(NSArrayObjectAtIndex(nil, 0) == nil, @"ERROR NSArrayObjectAtIndex");
 	XCTAssert(NSArrayObjectAtIndex(@[], 4) == nil, @"ERROR NSArrayObjectAtIndex");
 	XCTAssert(NSArrayObjectAtIndex(nil, 5) == nil, @"ERROR NSArrayObjectAtIndex");
+
+
+	XCTAssert(NSArrayIndexOfObject(@[ @(0) ], @(0)) != NSNotFound, @"ERROR NSArrayIndexOfObject");
+	XCTAssert(NSArrayIndexOfObject(@[ @(-1), @(0), @(1) ], @(0)) != NSNotFound, @"ERROR NSArrayIndexOfObject");
+	XCTAssert(NSArrayIndexOfObject(@[ @(-1), @(1) ], @(0)) == NSNotFound, @"ERROR NSArrayIndexOfObject");
+	XCTAssert(NSArrayIndexOfObject(@[], @(0)) == NSNotFound, @"ERROR NSArrayIndexOfObject");
+	XCTAssert(NSArrayIndexOfObject(nil, @(0)) == NSNotFound, @"ERROR NSArrayIndexOfObject");
+	XCTAssert(NSArrayIndexOfObject(@[], nil) == NSNotFound, @"ERROR NSArrayIndexOfObject");
+	XCTAssert(NSArrayIndexOfObject(nil, nil) == NSNotFound, @"ERROR NSArrayIndexOfObject");
 }
 
 - (void)testPerformanceExample
