@@ -100,3 +100,21 @@ NS_INLINE id NSArrayObjectAtIndex(NSArray * array, const NSUInteger index)
 	return (index < count) ? [array objectAtIndex:index] : nil;
 }
 
+
+/**
+ @brief Get index of object in array.
+ @param array The target array.
+ @param object The target object.
+ @return Index or 'NSNotFound' if array empty or object dosn't exists.
+ */
+NS_INLINE NSUInteger NSArrayIndexOfObject(NSArray * array, id object)
+{
+#if defined(DEBUG)
+	if (array)
+	{
+		assert([array isKindOfClass:[NSArray class]]);
+	}
+#endif
+	return (array && object) ? [array indexOfObject:object] : NSNotFound;
+}
+
