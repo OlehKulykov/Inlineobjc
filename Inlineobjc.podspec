@@ -3,9 +3,9 @@ Pod::Spec.new do |s|
 # Common settings
   s.name         = "Inlineobjc"
   s.version      = "0.1.9"
-  s.summary      = "Inline Objective-C small functions"
+  s.summary      = "Inline Objective-C small functions for more stable and safer code"
   s.description  = <<-DESC
-Inline Objective-C small functions. Few usefull daily functions.
+Inline Objective-C small functions for more stable and safer code. Few usefull daily functions.
                       DESC
   s.homepage     = "https://github.com/OlehKulykov/Inlineobjc"
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
