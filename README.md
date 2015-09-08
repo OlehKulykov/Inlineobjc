@@ -1,4 +1,6 @@
 # Inline Objective-C
+Objective-C small functions for more stable and safer code. 
+
 
 ### Installation with CocoaPods
 #### Podfile
@@ -6,6 +8,4 @@
 pod 'Inlineobjc', '~> 0.1'
 ```
 
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/OlehKulykov/inlineobjc/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
