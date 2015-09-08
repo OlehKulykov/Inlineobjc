@@ -127,7 +127,7 @@ NS_INLINE BOOL NSStringIsContainesSubstring(NSString * sourceString, NSString * 
  @brief Check strings are not empty and equal.
  @param string1 The test string object.
  @param string2 The test string object.
- @return YES string are not nil and equal.
+ @return YES strings are not nil and equal.
  */
 NS_INLINE BOOL NSStringsAreEqual(NSString * string1, NSString * string2)
 {
@@ -139,5 +139,55 @@ NS_INLINE BOOL NSStringsAreEqual(NSString * string1, NSString * string2)
 	}
 #endif
 	return (string1 && string2) ? [string1 isEqualToString:string2] : NO;
+}
+
+
+#include <wctype.h>
+
+
+/**
+ @brief Check string has all uppercase charactes.
+ @param string The test string object.
+ @return YES string not nil and all charactes is uppercase.
+ */
+NS_INLINE BOOL NSStringIsUppercase(NSString * string)
+{
+#if defined(DEBUG)
+	if (string)
+	{
+		assert([string isKindOfClass:[NSString class]]);
+//		assert(sizeof(wchar_t) == 4);
+//		const wchar_t * wstr = (const wchar_t *)[string cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];
+//		if (wstr)
+//		{
+//			while (*wstr) if (iswlower(*wstr)) return NO;
+//			return YES;
+//		}
+
+		// terrible check, but works with non ascii characters
+		if ([string length]) return [string isEqualToString:[string uppercaseStringWithLocale:[NSLocale currentLocale]]];
+	}
+	return NO;
+#endif
+}
+
+
+/**
+ @brief Check string has all lowercase charactes.
+ @param string The test string object.
+ @return YES string not nil and all charactes is lowercase.
+ */
+NS_INLINE BOOL NSStringIsLowercase(NSString * string)
+{
+#if defined(DEBUG)
+	if (string)
+	{
+		assert([string isKindOfClass:[NSString class]]);
+
+		// terrible check, but works with non ascii characters
+		if ([string length]) return [string isEqualToString:[string lowercaseStringWithLocale:[NSLocale currentLocale]]];
+	}
+	return NO;
+#endif
 }
 

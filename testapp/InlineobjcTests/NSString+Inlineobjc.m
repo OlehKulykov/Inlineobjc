@@ -68,6 +68,26 @@
 	XCTAssert(!NSStringsAreEqual(@"", @"a"), @"ERROR NSStringsAreEqual");
 	XCTAssert(!NSStringsAreEqual(@"", nil), @"ERROR NSStringsAreEqual");
 	XCTAssert(!NSStringsAreEqual(nil, @""), @"ERROR NSStringsAreEqual");
+
+
+	XCTAssert(!NSStringIsUppercase(nil), @"ERROR NSStringIsUppercase");
+	XCTAssert(!NSStringIsUppercase(@""), @"ERROR NSStringIsUppercase");
+	XCTAssert(NSStringIsUppercase(@"ABR"), @"ERROR NSStringIsUppercase");
+	XCTAssert(NSStringIsUppercase(@"АБР"), @"ERROR NSStringIsUppercase");
+	XCTAssert(!NSStringIsUppercase(@"AbR"), @"ERROR NSStringIsUppercase");
+	XCTAssert(!NSStringIsUppercase(@"АРвф"), @"ERROR NSStringIsUppercase");
+	XCTAssert(NSStringIsUppercase(@"MÜN"), @"ERROR NSStringIsUppercase");
+	XCTAssert(!NSStringIsUppercase(@"MüN"), @"ERROR NSStringIsUppercase");
+
+
+	XCTAssert(!NSStringIsLowercase(nil), @"ERROR NSStringIsLowercase");
+	XCTAssert(!NSStringIsLowercase(@""), @"ERROR NSStringIsLowercase");
+	XCTAssert(NSStringIsLowercase(@"abr"), @"ERROR NSStringIsLowercase");
+	XCTAssert(NSStringIsLowercase(@"абр"), @"ERROR NSStringIsLowercase");
+	XCTAssert(!NSStringIsLowercase(@"aBr"), @"ERROR NSStringIsLowercase");
+	XCTAssert(!NSStringIsLowercase(@"абвФ"), @"ERROR NSStringIsLowercase");
+	XCTAssert(NSStringIsLowercase(@"mün"), @"ERROR NSStringIsLowercase");
+	XCTAssert(!NSStringIsLowercase(@"mÜn"), @"ERROR NSStringIsLowercase");
 }
 
 - (void)testPerformanceExample
