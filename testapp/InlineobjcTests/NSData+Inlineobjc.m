@@ -54,15 +54,14 @@
 	XCTAssert(src1 != nil, @"ERROR internal");
 
 	NSData * dst1 = NSDataGetZipCompressDataWithRatio(src1, 1);
+	dst1 = NSDataGetZipCompressDataWithRatio(src1, 1);
 	XCTAssert(dst1 != nil, @"ERROR NSDataGetZipCompressDataWithRatio");
 
 	NSData * dst2 = NSDataGetZipDecompressData(dst1);
+	dst2 = NSDataGetZipDecompressData(dst1);
 	XCTAssert(dst2 != nil, @"ERROR NSDataGetZipDecompressData");
 
 	XCTAssert([src1 isEqualToData:dst2], @"ERROR NSDataGetZipDecompressData");
-
-
-
 
 
 
@@ -73,8 +72,10 @@
 	XCTAssert(src1 != nil, @"ERROR internal");
 
 	dst1 = NSDataGetLzmaCompressDataWithRatio(src1, 1);
+	dst1 = NSDataGetLzmaCompressDataWithRatio(src1, 1);
 	XCTAssert(dst1 != nil, @"ERROR NSDataGetLzmaCompressDataWithRatio");
 
+	dst2 = NSDataGetLzmaDecompressData(dst1);
 	dst2 = NSDataGetLzmaDecompressData(dst1);
 	XCTAssert(dst2 != nil, @"ERROR NSDataGetLzmaDecompressData");
 
