@@ -680,17 +680,13 @@ static int MatchFinder_Create(CMatchFinder *p, uint32_t historySize,
 			p->historySize = historySize;
 			p->hashSizeSum = hs;
 			p->cyclicBufferSize = newCyclicBufferSize;
-
 			numSons = newCyclicBufferSize;
 			if (p->btMode) numSons <<= 1;
 			newSize = hs + numSons;
-
 			if (p->hash && p->numRefs == newSize) return 1;
-
 			MatchFinder_FreeThisClassMemory(p, alloc);
 			p->numRefs = newSize;
 			p->hash = AllocRefs(newSize, alloc);
-
 			if (p->hash)
 			{
 				p->son = p->hash + p->hashSizeSum;
@@ -698,14 +694,12 @@ static int MatchFinder_Create(CMatchFinder *p, uint32_t historySize,
 			}
 		}
 	}
-
 	MatchFinder_Free(p, alloc);
 	return 0;
 }
 
 static void MatchFinder_ReadBlock(CMatchFinder *p) {
 	if (p->streamEndWasReached || p->result != SZ_OK) return;
-
 	if (p->directInput)
 	{
 		uint32_t curSize = 0xFFFFFFFF - p->streamPos;
@@ -722,7 +716,6 @@ static void MatchFinder_ReadBlock(CMatchFinder *p) {
 		uint8_t *dest = p->buffer + (p->streamPos - p->pos);
 		size_t size = (p->bufferBase + p->blockSize - dest);
 		if (size == 0) return;
-
 		p->result = p->stream->Read(p->stream, dest, &size);
 		if (p->result != SZ_OK) return;
 		if (size == 0)
@@ -738,19 +731,15 @@ static void MatchFinder_ReadBlock(CMatchFinder *p) {
 static void MatchFinder_SetLimits(CMatchFinder *p) {
 	uint32_t limit = kMaxValForNormalize - p->pos;
 	uint32_t limit2 = p->cyclicBufferSize - p->cyclicBufferPos;
-
 	if (limit2 < limit) limit = limit2;
 	limit2 = p->streamPos - p->pos;
-
 	if (limit2 <= p->keepSizeAfter)
 	{
 		if (limit2 > 0)
 			limit2 = 1;
 	}
 	else limit2 -= p->keepSizeAfter;
-
 	if (limit2 < limit) limit = limit2;
-
 	{
 		uint32_t lenLimit = p->streamPos - p->pos;
 		if (lenLimit > p->matchMaxLen)
@@ -764,7 +753,6 @@ static void MatchFinder_Init(CMatchFinder *p) {
 	uint32_t *hash = p->hash;
 	uint32_t num = p->hashSizeSum;
 	for (uint32_t i = 0; i < num; i++) hash[i] = kEmptyHashValue;
-
 	p->cyclicBufferPos = 0;
 	p->buffer = p->bufferBase;
 	p->pos = p->streamPos = p->cyclicBufferSize;
@@ -855,8 +843,7 @@ static uint32_t * Hc_GetMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32
 	for (;;)
 	{
 		uint32_t delta = pos - curMatch;
-		if (cutValue-- == 0 || delta >= _cyclicBufferSize)
-			return distances;
+		if (cutValue-- == 0 || delta >= _cyclicBufferSize) return distances;
 		{
 			const uint8_t *pb = cur - delta;
 			curMatch = son[_cyclicBufferPos - delta + ((delta > _cyclicBufferPos) ? _cyclicBufferSize : 0)];
@@ -884,24 +871,17 @@ static uint32_t Hc4_MatchFinder_GetMatches(CMatchFinder *p, uint32_t *distances)
 	uint32_t h2, h3, d2, d3, maxLen, offset, pos;
 	uint32_t *hash;
 	GET_MATCHES_HEADER(4)
-
 	HASH4_CALC;
-
 	hash = p->hash;
 	pos = p->pos;
-
 	d2 = pos - hash[                h2];
 	d3 = pos - hash[kFix3HashSize + h3];
-
 	curMatch = hash[kFix4HashSize + hv];
-
 	hash[                h2] = pos;
 	hash[kFix3HashSize + h3] = pos;
 	hash[kFix4HashSize + hv] = pos;
-
 	maxLen = 0;
 	offset = 0;
-
 	if (d2 < p->cyclicBufferSize && *(cur - d2) == *cur)
 	{
 		distances[0] = maxLen = 2;
@@ -1082,22 +1062,15 @@ static uint32_t Bt3_MatchFinder_GetMatches(CMatchFinder *p, uint32_t *distances)
 	uint32_t h2, d2, maxLen, offset, pos;
 	uint32_t *hash;
 	GET_MATCHES_HEADER(3)
-
 	HASH3_CALC;
-
 	hash = p->hash;
 	pos = p->pos;
-
 	d2 = pos - hash[h2];
-
 	curMatch = hash[kFix3HashSize + hv];
-
 	hash[h2] = pos;
 	hash[kFix3HashSize + hv] = pos;
-
 	maxLen = 2;
 	offset = 0;
-
 	if (d2 < p->cyclicBufferSize && *(cur - d2) == *cur)
 	{
 		UPDATE_maxLen
@@ -1110,7 +1083,6 @@ static uint32_t Bt3_MatchFinder_GetMatches(CMatchFinder *p, uint32_t *distances)
 			MOVE_POS_RET;
 		}
 	}
-
 	GET_MATCHES_FOOTER(offset, maxLen)
 }
 
@@ -1144,7 +1116,6 @@ static uint32_t Bt4_MatchFinder_GetMatches(CMatchFinder *p, uint32_t *distances)
 	hash[kFix4HashSize + hv] = pos;
 	maxLen = 0;
 	offset = 0;
-
 	if (d2 < p->cyclicBufferSize && *(cur - d2) == *cur)
 	{
 		distances[0] = maxLen = 2;
@@ -1238,8 +1209,7 @@ static int LzmaEnc_Alloc(CLzmaEnc *p, uint32_t keepWindowSize, ISzAlloc *alloc, 
 
 	if (beforeSize + p->dictSize < keepWindowSize) beforeSize = keepWindowSize - p->dictSize;
 	{
-		if (!MatchFinder_Create(&p->matchFinderBase, p->dictSize, beforeSize, p->numFastBytes, LZMA_MATCH_LEN_MAX, allocBig))
-			return SZ_ERROR_MEM;
+		if (!MatchFinder_Create(&p->matchFinderBase, p->dictSize, beforeSize, p->numFastBytes, LZMA_MATCH_LEN_MAX, allocBig)) return SZ_ERROR_MEM;
 		p->matchFinderObj = &p->matchFinderBase;
 		MatchFinder_CreateVTable(&p->matchFinderBase, &p->matchFinder);
 	}
@@ -1379,10 +1349,8 @@ static void FillDistancesPrices(CLzmaEnc *p) {
 		{
 			uint32_t *distancesPrices = p->distancesPrices[lenToPosState];
 			uint32_t i;
-			for (i = 0; i < kStartPosModelIndex; i++)
-				distancesPrices[i] = posSlotPrices[i];
-			for (; i < kNumFullDistances; i++)
-				distancesPrices[i] = posSlotPrices[GetPosSlot1(i)] + tempPrices[i];
+			for (i = 0; i < kStartPosModelIndex; i++) distancesPrices[i] = posSlotPrices[i];
+			for (; i < kNumFullDistances; i++) distancesPrices[i] = posSlotPrices[GetPosSlot1(i)] + tempPrices[i];
 		}
 	}
 	p->matchPriceCount = 0;
@@ -1405,14 +1373,12 @@ static void LenEnc_SetPrices(CLenEnc *p, uint32_t posState, uint32_t numSymbols,
 	uint32_t i = 0;
 	for (i = 0; i < kLenNumLowSymbols; i++)
 	{
-		if (i >= numSymbols)
-			return;
+		if (i >= numSymbols) return;
 		prices[i] = a0 + RcTree_GetPrice(p->low + (posState << kLenNumLowBits), kLenNumLowBits, i, ProbPrices);
 	}
 	for (; i < kLenNumLowSymbols + kLenNumMidSymbols; i++)
 	{
-		if (i >= numSymbols)
-			return;
+		if (i >= numSymbols) return;
 		prices[i] = b0 + RcTree_GetPrice(p->mid + (posState << kLenNumMidBits), kLenNumMidBits, i - kLenNumLowSymbols, ProbPrices);
 	}
 	for (; i < numSymbols; i++)
@@ -1463,7 +1429,6 @@ static int LzmaEnc_MemPrepare(CLzmaEncHandle pp, const uint8_t *src, size_t srcL
 	CLzmaEnc *p = (CLzmaEnc *)pp;
 	LzmaEnc_SetInputBuf(p, src, srcLen);
 	p->needInit = 1;
-
 	return LzmaEnc_AllocAndInit(p, keepWindowSize, alloc, allocBig);
 }
 
@@ -1488,16 +1453,13 @@ static void RangeEnc_ShiftLow(CRangeEnc *p) {
 	if ((uint32_t)p->low < (uint32_t)0xFF000000 || (unsigned)(p->low >> 32) != 0)
 	{
 		uint8_t temp = p->cache;
-		do
-		{
+		do {
 			uint8_t *buf = p->buf;
 			*buf++ = (uint8_t)(temp + (uint8_t)(p->low >> 32));
 			p->buf = buf;
-			if (buf == p->bufLim)
-				RangeEnc_FlushStream(p);
+			if (buf == p->bufLim) RangeEnc_FlushStream(p);
 			temp = 0xFF;
-		}
-		while (--p->cacheSize != 0);
+		} while (--p->cacheSize != 0);
 		p->cache = (uint8_t)((uint32_t)p->low >> 24);
 	}
 	p->cacheSize++;
@@ -1664,9 +1626,6 @@ static void MovePos(CLzmaEnc *p, uint32_t num) {
 
 static uint32_t GetOptimumFast(CLzmaEnc *p, uint32_t *backRes) {
 	uint32_t numAvail, mainLen, mainDist, numPairs, repIndex, repLen, i;
-	const uint8_t *data;
-	const uint32_t *matches;
-
 	if (p->additionalOffset == 0) mainLen = ReadMatchDistances(p, &numPairs);
 	else
 	{
@@ -1678,15 +1637,14 @@ static uint32_t GetOptimumFast(CLzmaEnc *p, uint32_t *backRes) {
 	*backRes = (uint32_t)-1;
 	if (numAvail < 2) return 1;
 	if (numAvail > LZMA_MATCH_LEN_MAX) numAvail = LZMA_MATCH_LEN_MAX;
-	data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - 1;
+	const uint8_t * data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - 1;
 
 	repLen = repIndex = 0;
 	for (i = 0; i < LZMA_NUM_REPS; i++)
 	{
 		uint32_t len;
 		const uint8_t *data2 = data - p->reps[i] - 1;
-		if (data[0] != data2[0] || data[1] != data2[1])
-			continue;
+		if (data[0] != data2[0] || data[1] != data2[1]) continue;
 		for (len = 2; len < numAvail && data[len] == data2[len]; len++);
 		if (len >= p->numFastBytes)
 		{
@@ -1700,7 +1658,7 @@ static uint32_t GetOptimumFast(CLzmaEnc *p, uint32_t *backRes) {
 			repLen = len;
 		}
 	}
-	matches = p->matches;
+	const uint32_t * matches = p->matches;
 	if (mainLen >= p->numFastBytes)
 	{
 		*backRes = matches[numPairs - 1] + LZMA_NUM_REPS;
@@ -1713,14 +1671,12 @@ static uint32_t GetOptimumFast(CLzmaEnc *p, uint32_t *backRes) {
 		mainDist = matches[numPairs - 1];
 		while (numPairs > 2 && mainLen == matches[numPairs - 4] + 1)
 		{
-			if (!ChangePair(matches[numPairs - 3], mainDist))
-				break;
+			if (!ChangePair(matches[numPairs - 3], mainDist)) break;
 			numPairs -= 2;
 			mainLen = matches[numPairs - 2];
 			mainDist = matches[numPairs - 1];
 		}
-		if (mainLen == 2 && mainDist >= 0x80)
-			mainLen = 1;
+		if (mainLen == 2 && mainDist >= 0x80) mainLen = 1;
 	}
 	if (repLen >= 2 && (
 						(repLen + 1 >= mainLen) ||
@@ -1808,8 +1764,7 @@ static uint32_t GetPureRepPrice(CLzmaEnc *p, uint32_t repIndex, uint32_t state, 
 	else
 	{
 		price = GET_PRICE_1(p->isRepG0[state]);
-		if (repIndex == 1)
-			price += GET_PRICE_0(p->isRepG1[state]);
+		if (repIndex == 1) price += GET_PRICE_0(p->isRepG1[state]);
 		else
 		{
 			price += GET_PRICE_1(p->isRepG1[state]);
@@ -1873,14 +1828,12 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 		return lenRes;
 	}
 	p->optimumCurrentIndex = p->optimumEndIndex = 0;
-
 	if (p->additionalOffset == 0) mainLen = ReadMatchDistances(p, &numPairs);
 	else
 	{
 		mainLen = p->longestMatchLength;
 		numPairs = p->numPairs;
 	}
-
 	numAvail = p->numAvail;
 	if (numAvail < 2)
 	{
@@ -1965,8 +1918,7 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 	{
 		uint32_t repLen = repLens[i];
 		uint32_t price;
-		if (repLen < 2)
-			continue;
+		if (repLen < 2) continue;
 		price = repMatchPrice + GetPureRepPrice(p, i, p->state, posState);
 		do {
 			uint32_t curAndLenPrice = price + p->repLenEnc.prices[posState][repLen - 2];
@@ -2012,8 +1964,7 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 			if (len == matches[offs])
 			{
 				offs += 2;
-				if (offs == numPairs)
-					break;
+				if (offs == numPairs) break;
 			}
 		}
 	}
@@ -2023,7 +1974,6 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 	const int kMatchNextStates[kNumStates]   = {7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10};
 	const int kLiteralNextStates[kNumStates] = {0, 0, 0, 0, 1, 2, 3, 4,  5,  6,   4, 5};
 	const int kShortRepNextStates[kNumStates]= {9, 9, 9, 9, 9, 9, 9, 11, 11, 11, 11, 11};
-
 	for (;;)
 	{
 		uint32_t numAvailFull, newLen, numPairs, posPrev, state, posState, startLen;
@@ -2033,10 +1983,8 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 		const uint8_t *data;
 		COptimal *curOpt;
 		COptimal *nextOpt;
-
 		cur++;
 		if (cur == lenEnd) return Backward(p, backRes, cur);
-
 		newLen = ReadMatchDistances(p, &numPairs);
 		if (newLen >= p->numFastBytes)
 		{
@@ -2101,7 +2049,6 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 		curOpt->backs[1] = reps[1];
 		curOpt->backs[2] = reps[2];
 		curOpt->backs[3] = reps[3];
-
 		curPrice = curOpt->price;
 		nextIsChar = 0;
 		data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - 1;
@@ -2140,8 +2087,7 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 		numAvailFull = p->numAvail;
 		{
 			uint32_t temp = kNumOpts - 1 - cur;
-			if (temp < numAvailFull)
-				numAvailFull = temp;
+			if (temp < numAvailFull) numAvailFull = temp;
 		}
 		if (numAvailFull < 2) continue;
 		numAvail = (numAvailFull <= p->numFastBytes ? numAvailFull : p->numFastBytes);
@@ -2151,9 +2097,7 @@ static uint32_t GetOptimum(CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
 			uint32_t lenTest2;
 			const uint8_t *data2 = data - reps[0] - 1;
 			uint32_t limit = p->numFastBytes + 1;
-			if (limit > numAvailFull)
-				limit = numAvailFull;
-
+			if (limit > numAvailFull) limit = numAvailFull;
 			for (temp = 1; temp < limit && data[temp] == data2[temp]; temp++);
 			lenTest2 = temp - 1;
 			if (lenTest2 >= 2)
