@@ -2516,7 +2516,6 @@ static int LzmaEnc_Encode2(CLzmaEnc *p, ICompressProgress *progress)
 
 static int LzmaEnc_MemEncode(CLzmaEncHandle pp, uint8_t *dest, size_t *destLen, const uint8_t *src, size_t srcLen,
 							 int writeEndMark, ICompressProgress *progress, ISzAlloc *alloc, ISzAlloc *allocBig) {
-	int res;
 	CLzmaEnc *p = (CLzmaEnc *)pp;
 	CSeqOutStreamBuf outStream;
 	LzmaEnc_SetInputBuf(p, src, srcLen);
@@ -2526,7 +2525,7 @@ static int LzmaEnc_MemEncode(CLzmaEncHandle pp, uint8_t *dest, size_t *destLen, 
 	outStream.overflow = 0;
 	p->writeEndMark = writeEndMark;
 	p->rc.outStream = &outStream.funcTable;
-	res = LzmaEnc_MemPrepare(pp, src, srcLen, 0, alloc, allocBig);
+	int res = LzmaEnc_MemPrepare(pp, src, srcLen, 0, alloc, allocBig);
 	if (res == SZ_OK) res = LzmaEnc_Encode2(p, progress);
 	*destLen -= outStream.rem;
 	if (outStream.overflow) return SZ_ERROR_OUTPUT_EOF;
@@ -2548,10 +2547,9 @@ static int LzmaEncode(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t
 					  const CLzmaEncProps *props, uint8_t *propsEncoded, size_t *propsSize, int writeEndMark,
 					  ICompressProgress *progress, ISzAlloc *alloc, ISzAlloc *allocBig) {
 	CLzmaEnc *p = (CLzmaEnc *)LzmaEnc_Create(alloc);
-	int res;
 	if (p == 0) return SZ_ERROR_MEM;
 
-	res = LzmaEnc_SetProps(p, props);
+	int res = LzmaEnc_SetProps(p, props);
 	if (res == SZ_OK)
 	{
 		res = LzmaEnc_WriteProperties(p, propsEncoded, propsSize);
@@ -2591,7 +2589,6 @@ static int LzmaCompress(uint8_t *dest, size_t *destLen, const uint8_t *src, size
 	props.pb = pb;
 	props.fb = fb;
 	props.numThreads = numThreads;
-
 	ISzAlloc g_Alloc = { SzAlloc, SzFree };
 	return LzmaEncode(dest, destLen, src, srcLen, &props, outProps, outPropsSize, 0,
 					  NULL, &g_Alloc, &g_Alloc);
@@ -2859,7 +2856,6 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const uint8_t *buf, size_t
 	const uint16_t *probs = p->probs;
 	unsigned state = p->state;
 	ELzmaDummy res;
-
 	{
 		const uint16_t *prob;
 		uint32_t bound;
@@ -2887,16 +2883,14 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const uint8_t *buf, size_t
 											(p->dicPos < p->reps[0] ? p->dicBufSize : 0)];
 				unsigned offs = 0x100;
 				unsigned symbol = 1;
-				do
-				{
+				do {
 					unsigned bit;
 					const uint16_t *probLit;
 					matchByte <<= 1;
 					bit = (matchByte & offs);
 					probLit = prob + offs + bit + symbol;
 					GET_BIT2_CHECK(probLit, symbol, offs &= ~bit, offs &= bit)
-				}
-				while (symbol < 0x100);
+				} while (symbol < 0x100);
 			}
 			res = DUMMY_LIT;
 		}
@@ -2990,7 +2984,6 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const uint8_t *buf, size_t
 				TREE_DECODE_CHECK(probLen, limit, len);
 				len += offset;
 			}
-
 			if (state < 4)
 			{
 				unsigned posSlot;
@@ -3008,23 +3001,19 @@ static ELzmaDummy LzmaDec_TryDummy(const CLzmaDec *p, const uint8_t *buf, size_t
 					else
 					{
 						numDirectBits -= kNumAlignBits;
-						do
-						{
+						do {
 							NORMALIZE_CHECK
 							range >>= 1;
 							code -= range & (((code - range) >> 31) - 1);
-						}
-						while (--numDirectBits != 0);
+						} while (--numDirectBits != 0);
 						prob = probs + Align;
 						numDirectBits = kNumAlignBits;
 					}
 					{
 						unsigned i = 1;
-						do
-						{
+						do {
 							GET_BIT_CHECK(prob + i, i);
-						}
-						while (--numDirectBits != 0);
+						} while (--numDirectBits != 0);
 					}
 				}
 			}
@@ -3071,15 +3060,12 @@ static int LzmaDec_DecodeReal(CLzmaDec *p, size_t limit, const uint8_t *bufLimit
 	unsigned pbMask = ((unsigned)1 << (p->prop.pb)) - 1;
 	unsigned lpMask = ((unsigned)1 << (p->prop.lp)) - 1;
 	unsigned lc = p->prop.lc;
-
 	uint8_t *dic = p->dic;
 	size_t dicBufSize = p->dicBufSize;
 	size_t dicPos = p->dicPos;
-
 	uint32_t processedPos = p->processedPos;
 	uint32_t checkDicSize = p->checkDicSize;
 	unsigned len = 0;
-
 	const uint8_t *buf = p->buf;
 	uint32_t range = p->range;
 	uint32_t code = p->code;
@@ -3339,8 +3325,7 @@ static int LzmaDec_DecodeReal(CLzmaDec *p, size_t limit, const uint8_t *bufLimit
 				{
 					do {
 						dic[dicPos++] = dic[pos];
-						if (++pos == dicBufSize)
-							pos = 0;
+						if (++pos == dicBufSize) pos = 0;
 					} while (--curLen != 0);
 				}
 			}
@@ -3502,7 +3487,6 @@ static int LzmaDecode(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t
 					  const uint8_t *propData, unsigned propSize, ELzmaFinishMode finishMode,
 					  ELzmaStatus *status, ISzAlloc *alloc) {
 	CLzmaDec p;
-	int res;
 	size_t outSize = *destLen, inSize = *srcLen;
 	*destLen = *srcLen = 0;
 	*status = LZMA_STATUS_NOT_SPECIFIED;
@@ -3513,7 +3497,7 @@ static int LzmaDecode(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t
 	p.dicBufSize = outSize;
 	LzmaDec_Init(&p);
 	*srcLen = inSize;
-	res = LzmaDec_DecodeToDic(&p, outSize, src, srcLen, finishMode, status);
+	int res = LzmaDec_DecodeToDic(&p, outSize, src, srcLen, finishMode, status);
 	*destLen = p.dicPos;
 	if (res == SZ_OK && *status == LZMA_STATUS_NEEDS_MORE_INPUT) res = SZ_ERROR_INPUT_EOF;
 	LzmaDec_FreeProbs(&p, alloc);
