@@ -46,11 +46,12 @@ NS_INLINE NSData * NSDataGetZipCompressDataWithRatio(NSData * dataToCompress, co
 	assert([dataToCompress isKindOfClass:[NSData class]]);
 #endif
 
-	if ([dataToCompress length] == 0) return nil;
-
 	z_stream zipStream = { 0 };
-	zipStream.next_in = (Bytef *)[dataToCompress bytes];
 	zipStream.avail_in = (uInt)[dataToCompress length];
+
+	if (zipStream.avail_in == 0) return nil;
+
+	zipStream.next_in = (Bytef *)[dataToCompress bytes];
 
 	const uInt outBufferSize = 32 * 1024;
 	Bytef outBuffer[outBufferSize];
@@ -132,11 +133,14 @@ NS_INLINE NSData * NSDataGetZipDecompressData(NSData * zipData)
 #if defined(DEBUG)
 	assert([zipData isKindOfClass:[NSData class]]);
 #endif
-	if ([zipData length] == 0) return nil;
 
 	z_stream zipStream = { 0 };
-	zipStream.next_in = (Bytef *)[zipData bytes];
 	zipStream.avail_in = (uInt)[zipData length];
+
+	if (zipStream.avail_in == 0) return nil;
+
+	zipStream.next_in = (Bytef *)[zipData bytes];
+
 	int result = inflateInit(&zipStream);
 	if (result != Z_OK) return nil;
 

@@ -22,5 +22,5 @@
 
 
 #import "NSData+InlineobjcZip.h"
-
+#import "NSData+InlineobjcLzma.h"
 
