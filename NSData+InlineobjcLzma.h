@@ -91,12 +91,51 @@
 #define __LZMA_SZ_ERROR_ARCHIVE 16
 #define __LZMA_SZ_ERROR_NO_ARCHIVE 17
 #define __LZMA_RINOK(x) { int __result__ = (x); if (__result__ != 0) return __result__; }
+#define __LZMA_kEmptyHashValue 0
+#define __LZMA_kCrcPoly 0xEDB88320
+#define __LZMA_kMaxValForNormalize ((uint32_t)0xFFFFFFFF)
+#define __LZMA_kNormalizeStepMin (1 << 10)
+#define __LZMA_kNormalizeMask (~(__LZMA_kNormalizeStepMin - 1))
 #define __LZMA_kHash2Size (1 << 10)
 #define __LZMA_kHash3Size (1 << 16)
 #define __LZMA_kHash4Size (1 << 20)
 #define __LZMA_kFix3HashSize (__LZMA_kHash2Size)
 #define __LZMA_kFix4HashSize (__LZMA_kHash2Size + __LZMA_kHash3Size)
 #define __LZMA_kFix5HashSize (__LZMA_kHash2Size + __LZMA_kHash3Size + __LZMA_kHash4Size)
+#define __LZMA_kBigHashDicLimit ((uint32_t)1 << 24)
+#define __LZMA_RangeEnc_GetProcessed(p) ((p)->processed + ((p)->buf - (p)->bufBase) + (p)->cacheSize)
+#define __LZMA_RC_BUF_SIZE (1 << 16)
+#define __LZMA_kDicLogSizeMaxCompress 32
+#define __LZMA_kInfinityPrice (1 << 30)
+#define __LZMA_REQUIRED_INPUT_MAX 20
+#define __LZMA_RC_INIT_SIZE 5
+#define __LZMA_DIC_MIN (1 << 12)
+#define __LZMA_BASE_SIZE 1846
+#define __LZMA_LIT_SIZE 0x300
+#define __LZMA_kNumPosBitsMax 4
+#define __LZMA_kNumPosStatesMax (1 << __LZMA_kNumPosBitsMax)
+#define __LZMA_LenChoice 0
+#define __LZMA_LenChoice2 (__LZMA_LenChoice + 1)
+#define __LZMA_LenLow (__LZMA_LenChoice2 + 1)
+#define __LZMA_LenMid (__LZMA_LenLow + (__LZMA_kNumPosStatesMax << __LZMA_kLenNumLowBits))
+#define __LZMA_LenHigh (__LZMA_LenMid + (__LZMA_kNumPosStatesMax << __LZMA_kLenNumMidBits))
+#define __LZMA_kNumLenProbs (__LZMA_LenHigh + __LZMA_kLenNumHighSymbols)
+#define __LZMA_IsMatch 0
+#define __LZMA_IsRep (__LZMA_IsMatch + (__LZMA_kNumStates << __LZMA_kNumPosBitsMax))
+#define __LZMA_IsRepG0 (__LZMA_IsRep + __LZMA_kNumStates)
+#define __LZMA_IsRepG1 (__LZMA_IsRepG0 + __LZMA_kNumStates)
+#define __LZMA_IsRepG2 (__LZMA_IsRepG1 + __LZMA_kNumStates)
+#define __LZMA_IsRep0Long (__LZMA_IsRepG2 + __LZMA_kNumStates)
+#define __LZMA_PosSlot (__LZMA_IsRep0Long + (__LZMA_kNumStates << __LZMA_kNumPosBitsMax))
+#define __LZMA_SpecPos (__LZMA_PosSlot + (__LZMA_kNumLenToPosStates << __LZMA_kNumPosSlotBits))
+#define __LZMA_Align (__LZMA_SpecPos + __LZMA_kNumFullDistances - __LZMA_kEndPosModelIndex)
+#define __LZMA_LenCoder (__LZMA_Align + __LZMA_kAlignTableSize)
+#define __LZMA_RepLenCoder (__LZMA_LenCoder + __LZMA_kNumLenProbs)
+#define __LZMA_Literal (__LZMA_RepLenCoder + __LZMA_kNumLenProbs)
+#define __LZMA_LzmaProps_GetNumProbs(p) (__LZMA_Literal + ((uint32_t)__LZMA_LIT_SIZE << ((p)->lc + (p)->lp)))
+#define __LZMA_kMatchMinLen 2
+#define __LZMA_kMatchSpecLenStart (__LZMA_kMatchMinLen + __LZMA_kLenNumLowSymbols + __LZMA_kLenNumMidSymbols + __LZMA_kLenNumHighSymbols)
+#define __LZMA_LzmaProps_GetNumProbs(p) (__LZMA_Literal + ((uint32_t)__LZMA_LIT_SIZE << ((p)->lc + (p)->lp)))
 #define __LZMA_HASH2_CALC hv = cur[0] | ((uint32_t)cur[1] << 8);
 #define __LZMA_HASH3_CALC { \
 uint32_t temp = p->crc[cur[0]] ^ cur[1]; \
@@ -135,11 +174,6 @@ h2 = temp & (__LZMA_kHash2Size - 1); \
 temp ^= ((uint32_t)cur[2] << 8); \
 h3 = temp & (__LZMA_kHash3Size - 1); \
 h4 = (temp ^ (p->crc[cur[3]] << 5)) & (kHash4Size - 1); }
-
-#define __LZMA_kEmptyHashValue 0
-#define __LZMA_kMaxValForNormalize ((uint32_t)0xFFFFFFFF)
-#define __LZMA_kNormalizeStepMin (1 << 10)
-#define __LZMA_kNormalizeMask (~(__LZMA_kNormalizeStepMin - 1))
 
 typedef struct {
 	int level;       /*  0 <= level <= 9 */
@@ -364,8 +398,6 @@ static void __LZMA_RangeEnc_Construct(__LZMA_CRangeEnc *p) {
 	p->bufBase = 0;
 }
 
-#define __LZMA_kCrcPoly 0xEDB88320
-
 static void __LZMA_MatchFinder_SetDefaultSettings(__LZMA_CMatchFinder *p) {
 	p->cutValue = 32;
 	p->btMode = 1;
@@ -540,10 +572,6 @@ static size_t __LZMA_MyWrite(void *pp, const void *data, size_t size) {
 	p->data += size;
 	return size;
 }
-
-#define __LZMA_kBigHashDicLimit ((uint32_t)1 << 24)
-#define __LZMA_RangeEnc_GetProcessed(p) ((p)->processed + ((p)->buf - (p)->bufBase) + (p)->cacheSize)
-#define __LZMA_RC_BUF_SIZE (1 << 16)
 
 static int __LZMA_RangeEnc_Alloc(__LZMA_CRangeEnc *p, __LZMA_ISzAlloc *alloc) {
 	if (p->bufBase == 0)
@@ -1248,8 +1276,6 @@ static void __LZMA_LzmaEnc_Init(__LZMA_CLzmaEnc *p) {
 	p->lpMask = (1 << p->lp) - 1;
 }
 
-#define __LZMA_kDicLogSizeMaxCompress 32
-
 static unsigned char __LZMA__BitScanReverse(unsigned long *firstBit1Index, unsigned long scanNum) {
 	unsigned char isNonzero;
 	isNonzero = (unsigned char)scanNum;
@@ -1723,7 +1749,6 @@ static uint32_t __LZMA_GetRepLen1Price(__LZMA_CLzmaEnc *p, uint32_t state, uint3
 }
 
 #define __LZMA_MakeAsShortRep(p) (p)->backPrev = 0; (p)->prev1IsChar = 0;
-#define __LZMA_kInfinityPrice (1 << 30)
 #define __LZMA_GET_PRICE(prob, symbol) \
 p->ProbPrices[((prob) ^ (((-(int)(symbol))) & (__LZMA_kBitModelTotal - 1))) >> __LZMA_kNumMoveReducingBits];
 
@@ -2598,9 +2623,6 @@ typedef struct {
 	uint32_t dicSize;
 } __LZMA_CLzmaProps;
 
-#define __LZMA_REQUIRED_INPUT_MAX 20
-#define __LZMA_RC_INIT_SIZE 5
-
 typedef struct {
 	__LZMA_CLzmaProps prop;
 	uint16_t *probs;
@@ -2622,7 +2644,6 @@ typedef struct {
 } __LZMA_CLzmaDec;
 
 #define __LZMA_LzmaDec_Construct(p) { (p)->dic = 0; (p)->probs = 0; }
-#define __LZMA_DIC_MIN (1 << 12)
 
 static int __LZMA_LzmaProps_Decode(__LZMA_CLzmaProps *p, const uint8_t *data, unsigned size) {
 	uint32_t dicSize;
@@ -2639,30 +2660,6 @@ static int __LZMA_LzmaProps_Decode(__LZMA_CLzmaProps *p, const uint8_t *data, un
 	p->lp = d % 5;
 	return __LZMA_SZ_OK;
 }
-
-#define __LZMA_BASE_SIZE 1846
-#define __LZMA_LIT_SIZE 0x300
-#define __LZMA_kNumPosBitsMax 4
-#define __LZMA_kNumPosStatesMax (1 << __LZMA_kNumPosBitsMax)
-#define __LZMA_LenChoice 0
-#define __LZMA_LenChoice2 (__LZMA_LenChoice + 1)
-#define __LZMA_LenLow (__LZMA_LenChoice2 + 1)
-#define __LZMA_LenMid (__LZMA_LenLow + (__LZMA_kNumPosStatesMax << __LZMA_kLenNumLowBits))
-#define __LZMA_LenHigh (__LZMA_LenMid + (__LZMA_kNumPosStatesMax << __LZMA_kLenNumMidBits))
-#define __LZMA_kNumLenProbs (__LZMA_LenHigh + __LZMA_kLenNumHighSymbols)
-#define __LZMA_IsMatch 0
-#define __LZMA_IsRep (__LZMA_IsMatch + (__LZMA_kNumStates << __LZMA_kNumPosBitsMax))
-#define __LZMA_IsRepG0 (__LZMA_IsRep + __LZMA_kNumStates)
-#define __LZMA_IsRepG1 (__LZMA_IsRepG0 + __LZMA_kNumStates)
-#define __LZMA_IsRepG2 (__LZMA_IsRepG1 + __LZMA_kNumStates)
-#define __LZMA_IsRep0Long (__LZMA_IsRepG2 + __LZMA_kNumStates)
-#define __LZMA_PosSlot (__LZMA_IsRep0Long + (__LZMA_kNumStates << __LZMA_kNumPosBitsMax))
-#define __LZMA_SpecPos (__LZMA_PosSlot + (__LZMA_kNumLenToPosStates << __LZMA_kNumPosSlotBits))
-#define __LZMA_Align (__LZMA_SpecPos + __LZMA_kNumFullDistances - __LZMA_kEndPosModelIndex)
-#define __LZMA_LenCoder (__LZMA_Align + __LZMA_kAlignTableSize)
-#define __LZMA_RepLenCoder (__LZMA_LenCoder + __LZMA_kNumLenProbs)
-#define __LZMA_Literal (__LZMA_RepLenCoder + __LZMA_kNumLenProbs)
-#define __LZMA_LzmaProps_GetNumProbs(p) (__LZMA_Literal + ((uint32_t)__LZMA_LIT_SIZE << ((p)->lc + (p)->lp)))
 
 static void __LZMA_LzmaDec_FreeProbs(__LZMA_CLzmaDec *p, __LZMA_ISzAlloc *alloc) {
 	alloc->Free(alloc, p->probs);
@@ -2707,9 +2704,6 @@ static void __LZMA_LzmaDec_Init(__LZMA_CLzmaDec *p) {
 	__LZMA_LzmaDec_InitDicAndState(p, 1, 1);
 }
 
-#define __LZMA_kMatchMinLen 2
-#define __LZMA_kMatchSpecLenStart (__LZMA_kMatchMinLen + __LZMA_kLenNumLowSymbols + __LZMA_kLenNumMidSymbols + __LZMA_kLenNumHighSymbols)
-
 static void __LZMA_LzmaDec_WriteRem(__LZMA_CLzmaDec *p, size_t limit) {
 	if (p->remainLen != 0 && p->remainLen < __LZMA_kMatchSpecLenStart)
 	{
@@ -2732,8 +2726,6 @@ static void __LZMA_LzmaDec_WriteRem(__LZMA_CLzmaDec *p, size_t limit) {
 		p->dicPos = dicPos;
 	}
 }
-
-#define __LZMA_LzmaProps_GetNumProbs(p) (__LZMA_Literal + ((uint32_t)__LZMA_LIT_SIZE << ((p)->lc + (p)->lp)))
 
 static void __LZMA_LzmaDec_InitStateReal(__LZMA_CLzmaDec *p) {
 	size_t numProbs = __LZMA_LzmaProps_GetNumProbs(&p->prop);
