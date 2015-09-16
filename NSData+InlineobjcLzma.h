@@ -387,13 +387,11 @@ static void MatchFinder_Construct(CMatchFinder *p) {
 	p->directInput = 0;
 	p->hash = NULL;
 	MatchFinder_SetDefaultSettings(p);
-
 	for (i = 0; i < 256; i++)
 	{
 		uint32_t r = i;
 		unsigned j;
-		for (j = 0; j < 8; j++)
-			r = (r >> 1) ^ (kCrcPoly & ~((r & 1) - 1));
+		for (j = 0; j < 8; j++) r = (r >> 1) ^ (kCrcPoly & ~((r & 1) - 1));
 		p->crc[i] = r;
 	}
 }
@@ -402,7 +400,6 @@ static void LzmaEncProps_Normalize(CLzmaEncProps *p) {
 	int level = p->level;
 	if (level < 0) level = 5;
 	p->level = level;
-
 	if (p->dictSize == 0) p->dictSize = (level <= 5 ? (1 << (level * 2 + 14)) : (level == 6 ? (1 << 25) : (1 << 26)));
 	if (p->dictSize > p->reduceSize)
 	{
@@ -413,7 +410,6 @@ static void LzmaEncProps_Normalize(CLzmaEncProps *p) {
 			if ((uint32_t)p->reduceSize <= ((uint32_t)3 << i)) { p->dictSize = ((uint32_t)3 << i); break; }
 		}
 	}
-
 	if (p->lc < 0) p->lc = 3;
 	if (p->lp < 0) p->lp = 0;
 	if (p->pb < 0) p->pb = 2;
@@ -429,7 +425,6 @@ static int LzmaEnc_SetProps(CLzmaEncHandle pp, const CLzmaEncProps *props2) {
 	CLzmaEnc *p = (CLzmaEnc *)pp;
 	CLzmaEncProps props = *props2;
 	LzmaEncProps_Normalize(&props);
-
 	if (props.lc > LZMA_LC_MAX
 		|| props.lp > LZMA_LP_MAX
 		|| props.pb > LZMA_PB_MAX
@@ -462,7 +457,6 @@ static int LzmaEnc_SetProps(CLzmaEncHandle pp, const CLzmaEncProps *props2) {
 		}
 		p->matchFinderBase.numHashBytes = numHashBytes;
 	}
-
 	p->matchFinderBase.cutValue = props.mc;
 	p->writeEndMark = props.writeEndMark;
 	return SZ_OK;
@@ -497,7 +491,6 @@ static void LzmaEnc_Construct(CLzmaEnc *p) {
 		LzmaEncProps_Init(&props);
 		LzmaEnc_SetProps(p, &props);
 	}
-
 	LzmaEnc_InitPriceTables(p->ProbPrices);
 	p->litProbs = 0;
 	p->saveState.litProbs = 0;
@@ -516,7 +509,6 @@ static int LzmaEnc_WriteProperties(CLzmaEncHandle pp, uint8_t *props, size_t *si
 	if (*size < LZMA_PROPS_SIZE) return SZ_ERROR_PARAM;
 	*size = LZMA_PROPS_SIZE;
 	props[0] = (uint8_t)((p->pb * 5 + p->lp) * 9 + p->lc);
-
 	if (dictSize >= ((uint32_t)1 << 22))
 	{
 		uint32_t kDictMask = ((uint32_t)1 << 20) - 1;
@@ -528,9 +520,7 @@ static int LzmaEnc_WriteProperties(CLzmaEncHandle pp, uint8_t *props, size_t *si
 		if (dictSize <= ((uint32_t)2 << i)) { dictSize = (2 << i); break; }
 		if (dictSize <= ((uint32_t)3 << i)) { dictSize = (3 << i); break; }
 	}
-
-	for (i = 0; i < 4; i++)
-		props[1 + i] = (uint8_t)(dictSize >> (8 * i));
+	for (i = 0; i < 4; i++) props[1 + i] = (uint8_t)(dictSize >> (8 * i));
 	return SZ_OK;
 }
 
@@ -634,16 +624,12 @@ static int MatchFinder_Create(CMatchFinder *p, uint32_t historySize,
 		MatchFinder_Free(p, alloc);
 		return 0;
 	}
-
 	sizeReserv = historySize >> 1;
 	if (historySize >= ((uint32_t)3 << 30)) sizeReserv = historySize >> 3;
 	else if (historySize >= ((uint32_t)2 << 30)) sizeReserv = historySize >> 2;
-
 	sizeReserv += (keepAddBufferBefore + matchMaxLen + keepAddBufferAfter) / 2 + (1 << 19);
-
 	p->keepSizeBefore = historySize + keepAddBufferBefore + 1;
 	p->keepSizeAfter = matchMaxLen + keepAddBufferAfter;
-
 	if (LzInWindow_Create(p, sizeReserv, alloc))
 	{
 		uint32_t newCyclicBufferSize = historySize + 1;
