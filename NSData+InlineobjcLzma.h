@@ -133,6 +133,7 @@
 #define __LZMA_RepLenCoder (__LZMA_LenCoder + __LZMA_kNumLenProbs)
 #define __LZMA_Literal (__LZMA_RepLenCoder + __LZMA_kNumLenProbs)
 #define __LZMA_LzmaProps_GetNumProbs(p) (__LZMA_Literal + ((uint32_t)__LZMA_LIT_SIZE << ((p)->lc + (p)->lp)))
+#define __LZMA_ChangePair(smallDist, bigDist) (((bigDist) >> 7) > (smallDist))
 #define __LZMA_kMatchMinLen 2
 #define __LZMA_kMatchSpecLenStart (__LZMA_kMatchMinLen + __LZMA_kLenNumLowSymbols + __LZMA_kLenNumMidSymbols + __LZMA_kLenNumHighSymbols)
 #define __LZMA_LzmaProps_GetNumProbs(p) (__LZMA_Literal + ((uint32_t)__LZMA_LIT_SIZE << ((p)->lc + (p)->lp)))
@@ -636,7 +637,7 @@ static __LZMA_CLzRef* __LZMA_AllocRefs(size_t num, __LZMA_ISzAlloc *alloc) {
 }
 
 static int __LZMA_MatchFinder_Create(__LZMA_CMatchFinder *p, uint32_t historySize,
-							  uint32_t keepAddBufferBefore, uint32_t matchMaxLen, uint32_t keepAddBufferAfter, __LZMA_ISzAlloc *alloc) {
+									 uint32_t keepAddBufferBefore, uint32_t matchMaxLen, uint32_t keepAddBufferAfter, __LZMA_ISzAlloc *alloc) {
 	uint32_t sizeReserv;
 	if (historySize > __LZMA_kMaxHistorySize)
 	{
@@ -842,8 +843,8 @@ static void __LZMA_MatchFinder_CheckLimits(__LZMA_CMatchFinder *p) {
 #define __LZMA_MOVE_POS_RET __LZMA_MOVE_POS return offset;
 
 static uint32_t * __LZMA_Hc_GetMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, __LZMA_CLzRef *son,
-									uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue,
-									uint32_t *distances, uint32_t maxLen) {
+										   uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue,
+										   uint32_t *distances, uint32_t maxLen) {
 	son[_cyclicBufferPos] = curMatch;
 	for (;;)
 	{
@@ -935,8 +936,8 @@ static void __LZMA_Hc4_MatchFinder_Skip(__LZMA_CMatchFinder *p, uint32_t num) {
 }
 
 static uint32_t * __LZMA_GetMatchesSpec1(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, __LZMA_CLzRef *son,
-								  uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue,
-								  uint32_t *distances, uint32_t maxLen) {
+										 uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue,
+										 uint32_t *distances, uint32_t maxLen) {
 	__LZMA_CLzRef *ptr0 = son + (_cyclicBufferPos << 1) + 1;
 	__LZMA_CLzRef *ptr1 = son + (_cyclicBufferPos << 1);
 	uint32_t len0 = 0, len1 = 0;
@@ -1002,7 +1003,7 @@ static uint32_t __LZMA_Bt2_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32
 }
 
 static void __LZMA_SkipMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, __LZMA_CLzRef *son,
-							uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue) {
+								   uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue) {
 	__LZMA_CLzRef *ptr0 = son + (_cyclicBufferPos << 1) + 1;
 	__LZMA_CLzRef *ptr1 = son + (_cyclicBufferPos << 1);
 	uint32_t len0 = 0, len1 = 0;
@@ -1424,7 +1425,7 @@ static int __LZMA_LzmaEnc_AllocAndInit(__LZMA_CLzmaEnc *p, uint32_t keepWindowSi
 }
 
 static int __LZMA_LzmaEnc_MemPrepare(__LZMA_CLzmaEncHandle pp, const uint8_t *src, size_t srcLen,
-							  uint32_t keepWindowSize, __LZMA_ISzAlloc *alloc, __LZMA_ISzAlloc *allocBig) {
+									 uint32_t keepWindowSize, __LZMA_ISzAlloc *alloc, __LZMA_ISzAlloc *allocBig) {
 	__LZMA_CLzmaEnc *p = (__LZMA_CLzmaEnc *)pp;
 	__LZMA_LzmaEnc_SetInputBuf(p, src, srcLen);
 	p->needInit = 1;
@@ -1620,8 +1621,6 @@ static void __LZMA_MovePos(__LZMA_CLzmaEnc *p, uint32_t num) {
 		p->matchFinder.Skip(p->matchFinderObj, num);
 	}
 }
-
-#define __LZMA_ChangePair(smallDist, bigDist) (((bigDist) >> 7) > (smallDist))
 
 static uint32_t __LZMA_GetOptimumFast(__LZMA_CLzmaEnc *p, uint32_t *backRes) {
 	uint32_t numAvail, mainLen, mainDist, numPairs, repIndex, repLen, i;
@@ -2166,7 +2165,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 						price + p->repLenEnc.prices[posState][lenTest - 2] +
 						__LZMA_GET_PRICE_0(p->isMatch[state2][posStateNext]) +
 						__LZMA_LitEnc_GetPriceMatched(__LZMA_LIT_PROBS(position + lenTest, data[lenTest - 1]),
-											   data[lenTest], data2[lenTest], p->ProbPrices);
+													  data[lenTest], data2[lenTest], p->ProbPrices);
 						state2 = kLiteralNextStates[state2];
 						posStateNext = (position + lenTest + 1) & p->pbMask;
 						nextRepMatchPrice = curAndLenCharPrice +
@@ -2243,7 +2242,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 						uint32_t curAndLenCharPrice = curAndLenPrice +
 						__LZMA_GET_PRICE_0(p->isMatch[state2][posStateNext]) +
 						__LZMA_LitEnc_GetPriceMatched(__LZMA_LIT_PROBS(position + lenTest, data[lenTest - 1]),
-											   data[lenTest], data2[lenTest], p->ProbPrices);
+													  data[lenTest], data2[lenTest], p->ProbPrices);
 						state2 = kLiteralNextStates[state2];
 						posStateNext = (posStateNext + 1) & p->pbMask;
 						nextRepMatchPrice = curAndLenCharPrice +
@@ -2333,7 +2332,7 @@ static int __LZMA_LzmaEnc_CodeOneBlock(__LZMA_CLzmaEnc *p, uint8_t useLimits, ui
 		  uint16_t *probs;
 		  const uint8_t *data;
 
-		 __LZMA_RangeEnc_EncodeBit(&p->rc, &p->isMatch[p->state][posState], 0);
+		  __LZMA_RangeEnc_EncodeBit(&p->rc, &p->isMatch[p->state][posState], 0);
 		  data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - p->additionalOffset;
 		  curByte = *data;
 		  probs = __LZMA_LIT_PROBS(nowPos32, *(data - 1));
@@ -2457,7 +2456,7 @@ static int __LZMA_LzmaEnc_Encode2(__LZMA_CLzmaEnc *p, __LZMA_ICompressProgress *
 }
 
 static int __LZMA_LzmaEnc_MemEncode(__LZMA_CLzmaEncHandle pp, uint8_t *dest, size_t *destLen, const uint8_t *src, size_t srcLen,
-							 int writeEndMark, __LZMA_ICompressProgress *progress, __LZMA_ISzAlloc *alloc, __LZMA_ISzAlloc *allocBig) {
+									int writeEndMark, __LZMA_ICompressProgress *progress, __LZMA_ISzAlloc *alloc, __LZMA_ISzAlloc *allocBig) {
 	__LZMA_CLzmaEnc *p = (__LZMA_CLzmaEnc *)pp;
 	__LZMA_CSeqOutStreamBuf outStream;
 	__LZMA_LzmaEnc_SetInputBuf(p, src, srcLen);
@@ -2486,8 +2485,8 @@ static void __LZMA_LzmaEnc_Destroy(__LZMA_CLzmaEncHandle p, __LZMA_ISzAlloc *all
 }
 
 static int __LZMA_LzmaEncode(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t srcLen,
-					  const __LZMA_CLzmaEncProps *props, uint8_t *propsEncoded, size_t *propsSize, int writeEndMark,
-					  __LZMA_ICompressProgress *progress, __LZMA_ISzAlloc *alloc, __LZMA_ISzAlloc *allocBig) {
+							 const __LZMA_CLzmaEncProps *props, uint8_t *propsEncoded, size_t *propsSize, int writeEndMark,
+							 __LZMA_ICompressProgress *progress, __LZMA_ISzAlloc *alloc, __LZMA_ISzAlloc *allocBig) {
 	__LZMA_CLzmaEnc *p = (__LZMA_CLzmaEnc *)__LZMA_LzmaEnc_Create(alloc);
 	if (p == 0) return __LZMA_SZ_ERROR_MEM;
 
@@ -2497,7 +2496,7 @@ static int __LZMA_LzmaEncode(uint8_t *dest, size_t *destLen, const uint8_t *src,
 		res = __LZMA_LzmaEnc_WriteProperties(p, propsEncoded, propsSize);
 		if (res == __LZMA_SZ_OK)
 			res = __LZMA_LzmaEnc_MemEncode(p, dest, destLen, src, srcLen,
-									writeEndMark, progress, alloc, allocBig);
+										   writeEndMark, progress, alloc, allocBig);
 	}
 	__LZMA_LzmaEnc_Destroy(p, alloc, allocBig);
 	return res;
@@ -2512,14 +2511,14 @@ static void __LZMA_MyFree(void *address) { free(address); }
 static void *__LZMA_SzAlloc(void *p, size_t size) { return __LZMA_MyAlloc(size); }
 static void __LZMA_SzFree(void *p, void *address) { __LZMA_MyFree(address); }
 static int __LZMA_LzmaCompress(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t srcLen,
-						uint8_t *outProps, size_t *outPropsSize,
-						int level, /* 0 <= level <= 9, default = 5 */
-						unsigned dictSize, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
-						int lc, /* 0 <= lc <= 8, default = 3  */
-						int lp, /* 0 <= lp <= 4, default = 0  */
-						int pb, /* 0 <= pb <= 4, default = 2  */
-						int fb,  /* 5 <= fb <= 273, default = 32 */
-						int numThreads /* 1 or 2, default = 2 */
+							   uint8_t *outProps, size_t *outPropsSize,
+							   int level, /* 0 <= level <= 9, default = 5 */
+							   unsigned dictSize, /* use (1 << N) or (3 << N). 4 KB < dictSize <= 128 MB */
+							   int lc, /* 0 <= lc <= 8, default = 3  */
+							   int lp, /* 0 <= lp <= 4, default = 0  */
+							   int pb, /* 0 <= pb <= 4, default = 2  */
+							   int fb,  /* 5 <= fb <= 273, default = 32 */
+							   int numThreads /* 1 or 2, default = 2 */
 ) {
 	__LZMA_CLzmaEncProps props;
 	__LZMA_LzmaEncProps_Init(&props);
@@ -2992,7 +2991,7 @@ static int __LZMA_LzmaDec_DecodeReal(__LZMA_CLzmaDec *p, size_t limit, const uin
 			prob = probs + __LZMA_Literal;
 			if (processedPos != 0 || checkDicSize != 0)
 				prob += ((uint32_t)__LZMA_LIT_SIZE * (((processedPos & lpMask) << lc) +
-													(dic[(dicPos == 0 ? dicBufSize : dicPos) - 1] >> (8 - lc))));
+													  (dic[(dicPos == 0 ? dicBufSize : dicPos) - 1] >> (8 - lc))));
 			processedPos++;
 
 			if (state < __LZMA_kNumLitStates)
@@ -3274,7 +3273,7 @@ static int __LZMA_LzmaDec_DecodeReal2(__LZMA_CLzmaDec *p, size_t limit, const ui
 }
 
 static int __LZMA_LzmaDec_DecodeToDic(__LZMA_CLzmaDec *p, size_t dicLimit, const uint8_t *src, size_t *srcLen,
-							   __LZMA_ELzmaFinishMode finishMode, __LZMA_ELzmaStatus *status) {
+									  __LZMA_ELzmaFinishMode finishMode, __LZMA_ELzmaStatus *status) {
 	size_t inSize = *srcLen;
 	(*srcLen) = 0;
 	__LZMA_LzmaDec_WriteRem(p, dicLimit);
@@ -3392,8 +3391,8 @@ static int __LZMA_LzmaDec_DecodeToDic(__LZMA_CLzmaDec *p, size_t dicLimit, const
 }
 
 static int __LZMA_LzmaDecode(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t *srcLen,
-					  const uint8_t *propData, unsigned propSize, __LZMA_ELzmaFinishMode finishMode,
-					  __LZMA_ELzmaStatus *status, __LZMA_ISzAlloc *alloc) {
+							 const uint8_t *propData, unsigned propSize, __LZMA_ELzmaFinishMode finishMode,
+							 __LZMA_ELzmaStatus *status, __LZMA_ISzAlloc *alloc) {
 	__LZMA_CLzmaDec p;
 	size_t outSize = *destLen, inSize = *srcLen;
 	*destLen = *srcLen = 0;
@@ -3413,7 +3412,7 @@ static int __LZMA_LzmaDecode(uint8_t *dest, size_t *destLen, const uint8_t *src,
 }
 
 static int __LZMA_LzmaUncompress(uint8_t *dest, size_t *destLen, const uint8_t *src, size_t *srcLen,
-						  const uint8_t *props, size_t propsSize) {
+								 const uint8_t *props, size_t propsSize) {
 	__LZMA_ISzAlloc g_Alloc = { __LZMA_SzAlloc, __LZMA_SzFree };
 	__LZMA_ELzmaStatus status;
 	return __LZMA_LzmaDecode(dest, destLen, src, srcLen, props, (unsigned)propsSize, __LZMA_FINISH_ANY, &status, &g_Alloc);
@@ -3445,11 +3444,11 @@ NS_INLINE NSData * NSDataGetLzmaDecompressData(NSData * lzmaData)
 	size_t dstLen = *int32Ptr;
 	size_t srcLen = [lzmaData length] - __LZMA_PROPS_SIZE - sizeof(uint32_t);
 	int res = __LZMA_LzmaUncompress((uint8_t *)unCompressedBuffer,
-							 &dstLen,
-							 inBuff,
-							 &srcLen,
-							 props,
-							 __LZMA_PROPS_SIZE);
+									&dstLen,
+									inBuff,
+									&srcLen,
+									props,
+									__LZMA_PROPS_SIZE);
 	if (res == __LZMA_SZ_OK)
 	{
 		if ((uint32_t)dstLen == (*int32Ptr))
