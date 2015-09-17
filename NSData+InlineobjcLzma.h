@@ -2454,18 +2454,17 @@ static int __LZMA_LzmaCompress(uint8_t *dest, size_t *destLen, const uint8_t *sr
 
 /**
  @brief Get lzma compressed data with compression ratio.
+ @warning First 4 bytes of compressed data is uint32 with decompressed size value.
  @param dataToCompress The data for compress.
  @param compressionRatio Float compression ratio value in range [0.0f; 1.0f].
- @return Lzma compressed data or nil on error or dataToCompress is empty.
+ @return Lzma compressed data or nil on error or dataToCompress is empty. First 4 bytes of compressed data is uint32 with decompressed size value.
  */
 NS_INLINE NSData * NSDataGetLzmaCompressDataWithRatio(NSData * dataToCompress, const CGFloat compressionRatio)
 {
 	if (!dataToCompress) return nil;
-
 #if defined(DEBUG)
 	assert([dataToCompress isKindOfClass:[NSData class]]);
 #endif
-
 	if ([dataToCompress length] == 0) return nil;
 	uint32_t outSize = (uint32_t)(((size_t)[dataToCompress length] / 20) * 21) + (1 << 16);
 	if (outSize == 0) return nil;
@@ -3318,7 +3317,8 @@ static int __LZMA_LzmaUncompress(uint8_t *dest, size_t *destLen, const uint8_t *
 
 /**
  @brief Get lzma decompressed data.
- @param lzmaData Lzma compressed data.
+ @warning First 4 bytes of data should be uint32 with decompressed size value.
+ @param lzmaData Lzma compressed data. First 4 bytes should be uint32 with decompressed size value.
  @return Decompressed data or nil on error or data is not lzma compressed.
  */
 NS_INLINE NSData * NSDataGetLzmaDecompressData(NSData * lzmaData)
