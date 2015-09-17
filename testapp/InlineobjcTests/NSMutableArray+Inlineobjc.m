@@ -111,6 +111,18 @@
 
 	[dst1 removeAllObjects];
 	[dst2 removeAllObjects];
+
+	NSMutableArrayAppendSafe(dst1, @[@(0),@(1),@(2)]);
+	res = [dst1 isEqualToArray:@[@(0),@(1),@(2)]];
+	XCTAssert(res, @"ERROR NSMutableArrayAppendSafe");
+
+	[dst1 removeAllObjects];
+
+	NSMutableArrayPrependSafe(dst1, @[@(0),@(1),@(2)]);
+	res = [dst1 isEqualToArray:@[@(2),@(1),@(0)]];
+	XCTAssert(res, @"ERROR NSMutableArrayPrependSafe");
+
+	[dst1 removeAllObjects];
 }
 
 - (void)testPerformanceExample

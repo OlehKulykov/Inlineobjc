@@ -137,3 +137,37 @@ NS_INLINE void NSMutableArrayPrependUniqSafe(NSMutableArray * array, id<NSFastEn
 	}
 }
 
+
+/**
+ @brief Append(add) to the end of the mutable array objects from 'NSFastEnumeration' container.
+ @param array The mutable array object. If array is nil - do nothing.
+ @param from 'NSFastEnumeration' container objects which append(add) to array. If container is nil - do nothing.
+ */
+NS_INLINE void NSMutableArrayAppendSafe(NSMutableArray * array, id<NSFastEnumeration> from)
+{
+	if (array && from)
+	{
+#if defined(DEBUG)
+		assert([array isKindOfClass:[NSMutableArray class]]);
+#endif
+		for (id object in from) [array addObject:object];
+	}
+}
+
+
+/**
+ @brief Prepend(add first) to the mutable array objects from 'NSFastEnumeration' container.
+ @param array The mutable array object. If array is nil - do nothing.
+ @param from 'NSFastEnumeration' container objects which prepend(add first) to array. If container is nil - do nothing.
+ */
+NS_INLINE void NSMutableArrayPrependSafe(NSMutableArray * array, id<NSFastEnumeration> from)
+{
+	if (array && from)
+	{
+#if defined(DEBUG)
+		assert([array isKindOfClass:[NSMutableArray class]]);
+#endif
+		for (id object in from) [array insertObject:object atIndex:0];
+	}
+}
+
