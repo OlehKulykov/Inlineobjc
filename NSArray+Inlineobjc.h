@@ -118,3 +118,54 @@ NS_INLINE NSUInteger NSArrayIndexOfObject(NSArray * array, id object)
 	return (array && object) ? [array indexOfObject:object] : NSNotFound;
 }
 
+
+/**
+ @brief Get serialized binary data from array.
+ @param array The array for serialization.
+ @return NSData with binary content.
+ */
+NS_INLINE NSData * NSArraySerializeToBinaryData(NSArray * array)
+{
+	if (array)
+	{
+#if defined(DEBUG)
+		assert([array isKindOfClass:[NSArray class]]);
+#endif
+		if ([array count])
+		{
+			NSDictionary * dictionary = [NSDictionary dictionaryWithObject:array forKey:@"NSArray_BinarySerialized_Array"];
+			if (dictionary)
+			{
+				NSError * error = nil;
+				NSData * res = [NSPropertyListSerialization dataWithPropertyList:dictionary format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
+				if (!error) return res;
+			}
+		}
+	}
+	return nil;
+}
+
+
+/**
+ @brief Get deserialized array from binary data.
+ @param binaryData The binary data for deserialization.
+ @return NSData with binary content.
+ */
+NS_INLINE NSArray * NSArrayDeserializeFromBinaryData(NSData * binaryData)
+{
+	if (binaryData)
+	{
+#if defined(DEBUG)
+		assert([binaryData isKindOfClass:[NSData class]]);
+#endif
+		NSError * error = nil;
+		NSPropertyListFormat format = (NSPropertyListFormat)0;
+		id res =  [NSPropertyListSerialization propertyListWithData:binaryData options:0 format:&format error:&error];
+		if (!error && res && [res isKindOfClass:[NSDictionary class]])
+		{
+			return [(NSDictionary *)res objectForKey:@"NSArray_BinarySerialized_Array"];
+		}
+	}
+	return nil;
+}
+
