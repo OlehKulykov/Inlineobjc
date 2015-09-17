@@ -1914,9 +1914,8 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 	for (i = 0; i < __LZMA_NUM_REPS; i++)
 	{
 		uint32_t repLen = repLens[i];
-		uint32_t price;
 		if (repLen < 2) continue;
-		price = repMatchPrice + __LZMA_GetPureRepPrice(p, i, p->state, posState);
+		uint32_t price = repMatchPrice + __LZMA_GetPureRepPrice(p, i, p->state, posState);
 		do {
 			uint32_t curAndLenPrice = price + p->repLenEnc.prices[posState][repLen - 2];
 			__LZMA_COptimal *opt = &p->opt[repLen];
@@ -1937,9 +1936,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 		while (len > matches[offs]) offs += 2;
 		for (; ; len++)
 		{
-			__LZMA_COptimal *opt;
 			uint32_t distance = matches[offs + 1];
-
 			uint32_t curAndLenPrice = normalMatchPrice + p->lenEnc.prices[posState][len - __LZMA_MATCH_LEN_MIN];
 			uint32_t lenToPosState = __LZMA_GetLenToPosState(len);
 			if (distance < __LZMA_kNumFullDistances)
@@ -1950,7 +1947,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 				__LZMA_GetPosSlot2(distance, slot);
 				curAndLenPrice += p->alignPrices[distance & __LZMA_kAlignMask] + p->posSlotPrices[lenToPosState][slot];
 			}
-			opt = &p->opt[len];
+			__LZMA_COptimal *opt = &p->opt[len];
 			if (curAndLenPrice < opt->price)
 			{
 				opt->price = curAndLenPrice;
@@ -1978,8 +1975,6 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 		uint8_t nextIsChar;
 		uint8_t curByte, matchByte;
 		const uint8_t *data;
-		__LZMA_COptimal *curOpt;
-		__LZMA_COptimal *nextOpt;
 		cur++;
 		if (cur == lenEnd) return __LZMA_Backward(p, backRes, cur);
 		newLen = __LZMA_ReadMatchDistances(p, &numPairs);
@@ -1990,7 +1985,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 			return __LZMA_Backward(p, backRes, cur);
 		}
 		position++;
-		curOpt = &p->opt[cur];
+		__LZMA_COptimal *curOpt = &p->opt[cur];
 		posPrev = curOpt->posPrev;
 		if (curOpt->prev1IsChar)
 		{
@@ -2060,7 +2055,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 			 __LZMA_LitEnc_GetPriceMatched(probs, curByte, matchByte, p->ProbPrices) :
 			 __LZMA_LitEnc_GetPrice(probs, curByte, p->ProbPrices));
 		}
-		nextOpt = &p->opt[cur + 1];
+		__LZMA_COptimal *nextOpt = &p->opt[cur + 1];
 		if (curAnd1Price < nextOpt->price)
 		{
 			nextOpt->price = curAnd1Price;
@@ -2328,14 +2323,10 @@ static int __LZMA_LzmaEnc_CodeOneBlock(__LZMA_CLzmaEnc *p, uint8_t useLimits, ui
 	  posState = nowPos32 & p->pbMask;
 	  if (len == 1 && pos == (uint32_t)-1)
 	  {
-		  uint8_t curByte;
-		  uint16_t *probs;
-		  const uint8_t *data;
-
 		  __LZMA_RangeEnc_EncodeBit(&p->rc, &p->isMatch[p->state][posState], 0);
-		  data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - p->additionalOffset;
-		  curByte = *data;
-		  probs = __LZMA_LIT_PROBS(nowPos32, *(data - 1));
+		  const uint8_t * data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - p->additionalOffset;
+		  uint8_t curByte = *data;
+		  uint16_t * probs = __LZMA_LIT_PROBS(nowPos32, *(data - 1));
 		  if (__LZMA_IsCharState(p->state)) __LZMA_LitEnc_Encode(&p->rc, probs, curByte);
 		  else __LZMA_LitEnc_EncodeMatched(&p->rc, probs, curByte, *(data - p->reps[0] - 1));
 		  p->state = kLiteralNextStates[p->state];
