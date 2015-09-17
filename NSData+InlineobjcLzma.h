@@ -460,10 +460,8 @@ static int __LZMA_LzmaEnc_SetProps(__LZMA_CLzmaEncHandle pp, const __LZMA_CLzmaE
 	p->dictSize = props.dictSize;
 	{
 		unsigned fb = props.fb;
-		if (fb < 5)
-			fb = 5;
-		if (fb > __LZMA_MATCH_LEN_MAX)
-			fb = __LZMA_MATCH_LEN_MAX;
+		if (fb < 5) fb = 5;
+		if (fb > __LZMA_MATCH_LEN_MAX) fb = __LZMA_MATCH_LEN_MAX;
 		p->numFastBytes = fb;
 	}
 	p->lc = props.lc;
@@ -475,10 +473,8 @@ static int __LZMA_LzmaEnc_SetProps(__LZMA_CLzmaEncHandle pp, const __LZMA_CLzmaE
 		uint32_t numHashBytes = 4;
 		if (props.btMode)
 		{
-			if (props.numHashBytes < 2)
-				numHashBytes = 2;
-			else if (props.numHashBytes < 4)
-				numHashBytes = props.numHashBytes;
+			if (props.numHashBytes < 2) numHashBytes = 2;
+			else if (props.numHashBytes < 4) numHashBytes = props.numHashBytes;
 		}
 		p->matchFinderBase.numHashBytes = numHashBytes;
 	}
@@ -493,16 +489,11 @@ static void __LZMA_LzmaEnc_InitPriceTables(uint32_t *ProbPrices) {
 		const int kCyclesBits = __LZMA_kNumBitPriceShiftBits;
 		uint32_t w = i;
 		uint32_t bitCount = 0;
-		int j;
-		for (j = 0; j < kCyclesBits; j++)
+		for (int j = 0; j < kCyclesBits; j++)
 		{
 			w = w * w;
 			bitCount <<= 1;
-			while (w >= ((uint32_t)1 << 16))
-			{
-				w >>= 1;
-				bitCount++;
-			}
+			while (w >= ((uint32_t)1 << 16)) { w >>= 1; bitCount++; }
 		}
 		ProbPrices[i >> __LZMA_kNumMoveReducingBits] = ((__LZMA_kNumBitModelTotalBits << kCyclesBits) - 15 - bitCount);
 	}
@@ -563,11 +554,7 @@ static void __LZMA_LzmaEnc_SetInputBuf(__LZMA_CLzmaEnc *p, const uint8_t *src, s
 
 static size_t __LZMA_MyWrite(void *pp, const void *data, size_t size) {
 	__LZMA_CSeqOutStreamBuf *p = (__LZMA_CSeqOutStreamBuf *)pp;
-	if (p->rem < size)
-	{
-		size = p->rem;
-		p->overflow = 1;
-	}
+	if (p->rem < size) { size = p->rem; p->overflow = 1; }
 	memcpy(p->data, data, size);
 	p->rem -= size;
 	p->data += size;
@@ -602,11 +589,7 @@ static void __LZMA_MatchFinder_FreeThisClassMemory(__LZMA_CMatchFinder *p, __LZM
 }
 
 static void __LZMA_LzInWindow_Free(__LZMA_CMatchFinder *p, __LZMA_ISzAlloc *alloc) {
-	if (!p->directInput)
-	{
-		alloc->Free(alloc, p->bufferBase);
-		p->bufferBase = NULL;
-	}
+	if (!p->directInput) { alloc->Free(alloc, p->bufferBase); p->bufferBase = NULL; }
 }
 
 void __LZMA_MatchFinder_Free(__LZMA_CMatchFinder *p, __LZMA_ISzAlloc *alloc) {
@@ -681,14 +664,12 @@ static int __LZMA_MatchFinder_Create(__LZMA_CMatchFinder *p, uint32_t historySiz
 			hs += p->fixedHashSize;
 		}
 		{
-			size_t newSize;
-			size_t numSons;
 			p->historySize = historySize;
 			p->hashSizeSum = hs;
 			p->cyclicBufferSize = newCyclicBufferSize;
-			numSons = newCyclicBufferSize;
+			size_t numSons = newCyclicBufferSize;
 			if (p->btMode) numSons <<= 1;
-			newSize = hs + numSons;
+			size_t newSize = hs + numSons;
 			if (p->hash && p->numRefs == newSize) return 1;
 			__LZMA_MatchFinder_FreeThisClassMemory(p, alloc);
 			p->numRefs = newSize;
@@ -741,15 +722,13 @@ static void __LZMA_MatchFinder_SetLimits(__LZMA_CMatchFinder *p) {
 	limit2 = p->streamPos - p->pos;
 	if (limit2 <= p->keepSizeAfter)
 	{
-		if (limit2 > 0)
-			limit2 = 1;
+		if (limit2 > 0) limit2 = 1;
 	}
 	else limit2 -= p->keepSizeAfter;
 	if (limit2 < limit) limit = limit2;
 	{
 		uint32_t lenLimit = p->streamPos - p->pos;
-		if (lenLimit > p->matchMaxLen)
-			lenLimit = p->matchMaxLen;
+		if (lenLimit > p->matchMaxLen) lenLimit = p->matchMaxLen;
 		p->lenLimit = lenLimit;
 	}
 	p->posLimit = p->pos + limit;
@@ -856,15 +835,12 @@ static uint32_t * __LZMA_Hc_GetMatchesSpec(uint32_t lenLimit, uint32_t curMatch,
 			if (pb[maxLen] == cur[maxLen] && *pb == *cur)
 			{
 				uint32_t len = 0;
-				while (++len != lenLimit)
-					if (pb[len] != cur[len])
-						break;
+				while (++len != lenLimit) if (pb[len] != cur[len]) break;
 				if (maxLen < len)
 				{
 					*distances++ = maxLen = len;
 					*distances++ = delta - 1;
-					if (len == lenLimit)
-						return distances;
+					if (len == lenLimit) return distances;
 				}
 			}
 		}
@@ -875,17 +851,15 @@ static uint32_t * __LZMA_Hc_GetMatchesSpec(uint32_t lenLimit, uint32_t curMatch,
 
 static uint32_t __LZMA_Hc4_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32_t *distances) {
 	uint32_t h2, h3, d2, d3, maxLen, offset, pos;
-	uint32_t *hash;
 	__LZMA_GET_MATCHES_HEADER(4)
 	__LZMA_HASH4_CALC;
-	hash = p->hash;
+	uint32_t *hash = p->hash;
 	pos = p->pos;
 	d2 = pos - hash[h2];
 	d3 = pos - hash[__LZMA_kFix3HashSize + h3];
 	curMatch = hash[__LZMA_kFix4HashSize + hv];
 	hash[h2] = pos;
-	hash[__LZMA_kFix3HashSize + h3] = pos;
-	hash[__LZMA_kFix4HashSize + hv] = pos;
+	hash[__LZMA_kFix3HashSize + h3] = hash[__LZMA_kFix4HashSize + hv] = pos;
 	maxLen = 0;
 	offset = 0;
 	if (d2 < p->cyclicBufferSize && *(cur - d2) == *cur)
@@ -921,14 +895,11 @@ static uint32_t __LZMA_Hc4_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32
 static void __LZMA_Hc4_MatchFinder_Skip(__LZMA_CMatchFinder *p, uint32_t num) {
 	do {
 		uint32_t h2, h3;
-		uint32_t *hash;
 		__LZMA_SKIP_HEADER(4)
 		__LZMA_HASH4_CALC;
-		hash = p->hash;
+		uint32_t *hash = p->hash;
 		curMatch = hash[__LZMA_kFix4HashSize + hv];
-		hash[h2] =
-		hash[__LZMA_kFix3HashSize + h3] =
-		hash[__LZMA_kFix4HashSize + hv] = p->pos;
+		hash[h2] = hash[__LZMA_kFix3HashSize + h3] = hash[__LZMA_kFix4HashSize + hv] = p->pos;
 		p->son[p->cyclicBufferPos] = curMatch;
 		__LZMA_MOVE_POS
 	}
@@ -1066,10 +1037,9 @@ static void __LZMA_Bt2_MatchFinder_Skip(__LZMA_CMatchFinder *p, uint32_t num) {
 
 static uint32_t __LZMA_Bt3_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32_t *distances) {
 	uint32_t h2, d2, maxLen, offset, pos;
-	uint32_t *hash;
 	__LZMA_GET_MATCHES_HEADER(3)
 	__LZMA_HASH3_CALC;
-	hash = p->hash;
+	uint32_t *hash = p->hash;
 	pos = p->pos;
 	d2 = pos - hash[h2];
 	curMatch = hash[__LZMA_kFix3HashSize + hv];
@@ -1095,23 +1065,20 @@ static uint32_t __LZMA_Bt3_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32
 static void __LZMA_Bt3_MatchFinder_Skip(__LZMA_CMatchFinder *p, uint32_t num) {
 	do {
 		uint32_t h2;
-		uint32_t *hash;
 		__LZMA_SKIP_HEADER(3)
 		__LZMA_HASH3_CALC;
-		hash = p->hash;
+		uint32_t *hash = p->hash;
 		curMatch = hash[__LZMA_kFix3HashSize + hv];
-		hash[h2] =
-		hash[__LZMA_kFix3HashSize + hv] = p->pos;
+		hash[h2] = hash[__LZMA_kFix3HashSize + hv] = p->pos;
 		__LZMA_SKIP_FOOTER
 	} while (--num != 0);
 }
 
 static uint32_t __LZMA_Bt4_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32_t *distances) {
 	uint32_t h2, h3, d2, d3, maxLen, offset, pos;
-	uint32_t *hash;
 	__LZMA_GET_MATCHES_HEADER(4)
 	__LZMA_HASH4_CALC;
-	hash = p->hash;
+	uint32_t *hash = p->hash;
 	pos = p->pos;
 	d2 = pos - hash[h2];
 	d3 = pos - hash[__LZMA_kFix3HashSize + h3];
@@ -1151,14 +1118,11 @@ static uint32_t __LZMA_Bt4_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32
 static void __LZMA_Bt4_MatchFinder_Skip(__LZMA_CMatchFinder *p, uint32_t num) {
 	do {
 		uint32_t h2, h3;
-		uint32_t *hash;
 		__LZMA_SKIP_HEADER(4)
 		__LZMA_HASH4_CALC;
-		hash = p->hash;
+		uint32_t *hash = p->hash;
 		curMatch = hash[__LZMA_kFix4HashSize + hv];
-		hash[h2] =
-		hash[__LZMA_kFix3HashSize + h3] =
-		hash[__LZMA_kFix4HashSize + hv] = p->pos;
+		hash[h2] = hash[__LZMA_kFix3HashSize + h3] = hash[__LZMA_kFix4HashSize + hv] = p->pos;
 		__LZMA_SKIP_FOOTER
 	} while (--num != 0);
 }
@@ -1357,8 +1321,7 @@ static void __LZMA_FillDistancesPrices(__LZMA_CLzmaEnc *p) {
 }
 
 static void __LZMA_FillAlignPrices(__LZMA_CLzmaEnc *p) {
-	for (uint32_t i = 0; i < __LZMA_kAlignTableSize; i++)
-		p->alignPrices[i] = __LZMA_RcTree_ReverseGetPrice(p->posAlignEncoder, __LZMA_kNumAlignBits, i, p->ProbPrices);
+	for (uint32_t i = 0; i < __LZMA_kAlignTableSize; i++) p->alignPrices[i] = __LZMA_RcTree_ReverseGetPrice(p->posAlignEncoder, __LZMA_kNumAlignBits, i, p->ProbPrices);
 	p->alignPriceCount = 0;
 }
 
@@ -1391,9 +1354,7 @@ static void __LZMA_LenPriceEnc_UpdateTable(__LZMA_CLenPriceEnc *p, uint32_t posS
 }
 
 static void __LZMA_LenPriceEnc_UpdateTables(__LZMA_CLenPriceEnc *p, uint32_t numPosStates, const uint32_t *ProbPrices) {
-	uint32_t posState;
-	for (posState = 0; posState < numPosStates; posState++)
-		__LZMA_LenPriceEnc_UpdateTable(p, posState, ProbPrices);
+	for (uint32_t posState = 0; posState < numPosStates; posState++) __LZMA_LenPriceEnc_UpdateTable(p, posState, ProbPrices);
 }
 
 static void __LZMA_LzmaEnc_InitPrices(__LZMA_CLzmaEnc *p) {
@@ -1402,9 +1363,7 @@ static void __LZMA_LzmaEnc_InitPrices(__LZMA_CLzmaEnc *p) {
 		__LZMA_FillDistancesPrices(p);
 		__LZMA_FillAlignPrices(p);
 	}
-	p->lenEnc.tableSize =
-	p->repLenEnc.tableSize =
-	p->numFastBytes + 1 - __LZMA_MATCH_LEN_MIN;
+	p->lenEnc.tableSize = p->repLenEnc.tableSize = p->numFastBytes + 1 - __LZMA_MATCH_LEN_MIN;
 	__LZMA_LenPriceEnc_UpdateTables(&p->lenEnc, 1 << p->pb, p->ProbPrices);
 	__LZMA_LenPriceEnc_UpdateTables(&p->repLenEnc, 1 << p->pb, p->ProbPrices);
 }
@@ -1814,7 +1773,6 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 	uint32_t matchPrice, repMatchPrice, normalMatchPrice;
 	uint32_t reps[__LZMA_NUM_REPS], repLens[__LZMA_NUM_REPS];
 	uint32_t *matches;
-	const uint8_t *data;
 	uint8_t curByte, matchByte;
 	if (p->optimumEndIndex != p->optimumCurrentIndex)
 	{
@@ -1838,14 +1796,13 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 		return 1;
 	}
 	if (numAvail > __LZMA_MATCH_LEN_MAX) numAvail = __LZMA_MATCH_LEN_MAX;
-	data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - 1;
+	const uint8_t *data = p->matchFinder.GetPointerToCurrentPos(p->matchFinderObj) - 1;
 	repMaxIndex = 0;
 	for (i = 0; i < __LZMA_NUM_REPS; i++)
 	{
 		uint32_t lenTest;
-		const uint8_t *data2;
 		reps[i] = p->reps[i];
-		data2 = data - reps[i] - 1;
+		const uint8_t *data2 = data - reps[i] - 1;
 		if (data[0] != data2[0] || data[1] != data2[1])
 		{
 			repLens[i] = 0;
@@ -1857,9 +1814,8 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 	}
 	if (repLens[repMaxIndex] >= p->numFastBytes)
 	{
-		uint32_t lenRes;
 		*backRes = repMaxIndex;
-		lenRes = repLens[repMaxIndex];
+		uint32_t lenRes = repLens[repMaxIndex];
 		__LZMA_MovePos(p, lenRes - 1);
 		return lenRes;
 	}
