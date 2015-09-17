@@ -3343,13 +3343,10 @@ NS_INLINE NSData * NSDataGetLzmaDecompressData(NSData * lzmaData)
 									&srcLen,
 									props,
 									__LZMA_PROPS_SIZE);
-	if (res == __LZMA_SZ_OK)
+	if (res == __LZMA_SZ_OK && (uint32_t)dstLen == (*int32Ptr))
 	{
-		if ((uint32_t)dstLen == (*int32Ptr))
-		{
-			NSData * d = [NSData dataWithBytesNoCopy:unCompressedBuffer length:dstLen freeWhenDone:YES];
-			if (d) return d;
-		}
+		NSData * d = [NSData dataWithBytesNoCopy:unCompressedBuffer length:dstLen freeWhenDone:YES];
+		if (d) return d;
 	}
 	free(unCompressedBuffer);
 	return nil;
