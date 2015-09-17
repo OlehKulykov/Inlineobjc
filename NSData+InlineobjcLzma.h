@@ -2147,10 +2147,9 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 			{
 				uint32_t curAndLenPrice = normalMatchPrice + p->lenEnc.prices[posState][lenTest - __LZMA_MATCH_LEN_MIN];
 				uint32_t lenToPosState = __LZMA_GetLenToPosState(lenTest);
-				__LZMA_COptimal *opt;
 				if (curBack < __LZMA_kNumFullDistances) curAndLenPrice += p->distancesPrices[lenToPosState][curBack];
 				else curAndLenPrice += p->posSlotPrices[lenToPosState][posSlot] + p->alignPrices[curBack & __LZMA_kAlignMask];
-				opt = &p->opt[cur + lenTest];
+				__LZMA_COptimal *opt = &p->opt[cur + lenTest];
 				if (curAndLenPrice < opt->price)
 				{
 					opt->price = curAndLenPrice;
