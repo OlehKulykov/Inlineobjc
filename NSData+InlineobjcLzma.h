@@ -1680,16 +1680,13 @@ static uint32_t __LZMA_LitEnc_GetPrice(const uint16_t *probs, uint32_t symbol, c
 
 #define __LZMA_MakeAsChar(p) (p)->backPrev = (uint32_t)(-1); (p)->prev1IsChar = 0;
 #define __LZMA_GET_PRICE_1(prob) p->ProbPrices[((prob) ^ (__LZMA_kBitModelTotal - 1)) >> __LZMA_kNumMoveReducingBits]
-
-static uint32_t __LZMA_GetRepLen1Price(__LZMA_CLzmaEnc *p, uint32_t state, uint32_t posState) {
-	return
-	__LZMA_GET_PRICE_0(p->isRepG0[state]) +
-	__LZMA_GET_PRICE_0(p->isRep0Long[state][posState]);
-}
-
 #define __LZMA_MakeAsShortRep(p) (p)->backPrev = 0; (p)->prev1IsChar = 0;
 #define __LZMA_GET_PRICE(prob, symbol) \
 p->ProbPrices[((prob) ^ (((-(int)(symbol))) & (__LZMA_kBitModelTotal - 1))) >> __LZMA_kNumMoveReducingBits];
+
+static uint32_t __LZMA_GetRepLen1Price(__LZMA_CLzmaEnc *p, uint32_t state, uint32_t posState) {
+	return (__LZMA_GET_PRICE_0(p->isRepG0[state]) + __LZMA_GET_PRICE_0(p->isRep0Long[state][posState]));
+}
 
 static uint32_t __LZMA_GetPureRepPrice(__LZMA_CLzmaEnc *p, uint32_t repIndex, uint32_t state, uint32_t posState) {
 	uint32_t price;
@@ -1745,8 +1742,7 @@ static uint32_t __LZMA_Backward(__LZMA_CLzmaEnc *p, uint32_t *backRes, uint32_t 
 #define __LZMA_IsShortRep(p) ((p)->backPrev == 0)
 
 static uint32_t __LZMA_GetRepPrice(__LZMA_CLzmaEnc *p, uint32_t repIndex, uint32_t len, uint32_t state, uint32_t posState) {
-	return p->repLenEnc.prices[posState][len - __LZMA_MATCH_LEN_MIN] +
-	__LZMA_GetPureRepPrice(p, repIndex, state, posState);
+	return (p->repLenEnc.prices[posState][len - __LZMA_MATCH_LEN_MIN] + __LZMA_GetPureRepPrice(p, repIndex, state, posState));
 }
 
 static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_t *backRes) {
@@ -1845,9 +1841,7 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 	p->opt[1].posPrev = 0;
 	for (i = 0; i < __LZMA_NUM_REPS; i++) p->opt[0].backs[i] = reps[i];
 	len = lenEnd;
-	do
-		p->opt[len--].price = __LZMA_kInfinityPrice;
-	while (len >= 2);
+	do { p->opt[len--].price = __LZMA_kInfinityPrice; }	while (len >= 2);
 	for (i = 0; i < __LZMA_NUM_REPS; i++)
 	{
 		uint32_t repLen = repLens[i];
@@ -1899,7 +1893,6 @@ static uint32_t __LZMA_GetOptimum(__LZMA_CLzmaEnc *p, uint32_t position, uint32_
 			}
 		}
 	}
-
 	cur = 0;
 	const int kRepNextStates[__LZMA_kNumStates] = {8, 8, 8, 8, 8, 8, 8, 11, 11, 11, 11, 11};
 	const int kMatchNextStates[__LZMA_kNumStates] = {7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10};
@@ -2309,15 +2302,12 @@ static int __LZMA_LzmaEnc_CodeOneBlock(__LZMA_CLzmaEnc *p, uint8_t useLimits, ui
 			  pos -= __LZMA_NUM_REPS;
 			  __LZMA_GetPosSlot(pos, posSlot);
 			  __LZMA_RcTree_Encode(&p->rc, p->posSlotEncoder[__LZMA_GetLenToPosState(len)], __LZMA_kNumPosSlotBits, posSlot);
-
 			  if (posSlot >= __LZMA_kStartPosModelIndex)
 			  {
 				  uint32_t footerBits = ((posSlot >> 1) - 1);
 				  uint32_t base = ((2 | (posSlot & 1)) << footerBits);
 				  uint32_t posReduced = pos - base;
-
-				  if (posSlot < __LZMA_kEndPosModelIndex)
-					  __LZMA_RcTree_ReverseEncode(&p->rc, p->posEncoders + base - posSlot - 1, footerBits, posReduced);
+				  if (posSlot < __LZMA_kEndPosModelIndex) __LZMA_RcTree_ReverseEncode(&p->rc, p->posEncoders + base - posSlot - 1, footerBits, posReduced);
 				  else
 				  {
 					  __LZMA_RangeEnc_EncodeDirectBits(&p->rc, posReduced >> __LZMA_kNumAlignBits, footerBits - __LZMA_kNumAlignBits);
@@ -3199,8 +3189,7 @@ static int __LZMA_LzmaDec_DecodeToDic(__LZMA_CLzmaDec *p, size_t dicLimit, const
 				return __LZMA_SZ_OK;
 			}
 			if (p->tempBuf[0] != 0) return __LZMA_SZ_ERROR_DATA;
-			p->code =
-			((uint32_t)p->tempBuf[1] << 24)
+			p->code = ((uint32_t)p->tempBuf[1] << 24)
 			| ((uint32_t)p->tempBuf[2] << 16)
 			| ((uint32_t)p->tempBuf[3] << 8)
 			| ((uint32_t)p->tempBuf[4]);
@@ -3232,7 +3221,6 @@ static int __LZMA_LzmaDec_DecodeToDic(__LZMA_CLzmaDec *p, size_t dicLimit, const
 		if (p->needInitState) __LZMA_LzmaDec_InitStateReal(p);
 		if (p->tempBufSize == 0)
 		{
-			size_t processed;
 			const uint8_t *bufLimit;
 			if (inSize < __LZMA_REQUIRED_INPUT_MAX || checkEndMarkNow)
 			{
@@ -3255,7 +3243,7 @@ static int __LZMA_LzmaDec_DecodeToDic(__LZMA_CLzmaDec *p, size_t dicLimit, const
 			else bufLimit = src + inSize - __LZMA_REQUIRED_INPUT_MAX;
 			p->buf = src;
 			if (__LZMA_LzmaDec_DecodeReal2(p, dicLimit, bufLimit) != 0) return __LZMA_SZ_ERROR_DATA;
-			processed = (size_t)(p->buf - src);
+			size_t processed = (size_t)(p->buf - src);
 			(*srcLen) += processed;
 			src += processed;
 			inSize -= processed;
