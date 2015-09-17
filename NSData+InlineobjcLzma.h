@@ -120,6 +120,7 @@
 #define __LZMA_LenMid (__LZMA_LenLow + (__LZMA_kNumPosStatesMax << __LZMA_kLenNumLowBits))
 #define __LZMA_LenHigh (__LZMA_LenMid + (__LZMA_kNumPosStatesMax << __LZMA_kLenNumMidBits))
 #define __LZMA_kNumLenProbs (__LZMA_LenHigh + __LZMA_kLenNumHighSymbols)
+#define __LZMA_kNumLitStates 7
 #define __LZMA_IsMatch 0
 #define __LZMA_IsRep (__LZMA_IsMatch + (__LZMA_kNumStates << __LZMA_kNumPosBitsMax))
 #define __LZMA_IsRepG0 (__LZMA_IsRep + __LZMA_kNumStates)
@@ -252,21 +253,17 @@ typedef struct {
 	uint32_t lenLimit;
 	uint32_t cyclicBufferPos;
 	uint32_t cyclicBufferSize; /* it must be = (historySize + 1) */
-
 	uint8_t streamEndWasReached;
 	uint8_t btMode;
 	uint8_t bigHash;
 	uint8_t directInput;
-
 	uint32_t matchMaxLen;
 	__LZMA_CLzRef *hash;
 	__LZMA_CLzRef *son;
 	uint32_t hashMask;
 	uint32_t cutValue;
-
 	uint8_t *bufferBase;
 	__LZMA_ISeqInStream *stream;
-
 	uint32_t blockSize;
 	uint32_t keepSizeBefore;
 	uint32_t keepSizeAfter;
@@ -311,10 +308,8 @@ typedef struct {
 
 typedef struct {
 	uint16_t *litProbs;
-
 	uint32_t state;
 	uint32_t reps[__LZMA_NUM_REPS];
-
 	uint16_t isMatch[__LZMA_kNumStates][__LZMA_NUM_PB_STATES_MAX];
 	uint16_t isRep[__LZMA_kNumStates];
 	uint16_t isRepG0[__LZMA_kNumStates];
@@ -324,7 +319,6 @@ typedef struct {
 	uint16_t posSlotEncoder[__LZMA_kNumLenToPosStates][1 << __LZMA_kNumPosSlotBits];
 	uint16_t posEncoders[__LZMA_kNumFullDistances - __LZMA_kEndPosModelIndex];
 	uint16_t posAlignEncoder[1 << __LZMA_kNumAlignBits];
-
 	__LZMA_CLenPriceEnc lenEnc;
 	__LZMA_CLenPriceEnc repLenEnc;
 } __LZMA_CSaveState;
@@ -332,7 +326,6 @@ typedef struct {
 typedef struct {
 	void *matchFinderObj;
 	__LZMA_IMatchFinder matchFinder;
-
 	uint32_t optimumEndIndex;
 	uint32_t optimumCurrentIndex;
 	uint32_t longestMatchLength;
@@ -342,31 +335,24 @@ typedef struct {
 	uint32_t additionalOffset;
 	uint32_t reps[__LZMA_NUM_REPS];
 	uint32_t state;
-
 	unsigned lc, lp, pb;
 	unsigned lpMask, pbMask;
 	unsigned lclp;
-
 	uint16_t *litProbs;
-
 	uint8_t fastMode;
 	uint8_t writeEndMark;
 	uint8_t finished;
 	uint8_t multiThread;
 	uint8_t needInit;
-
 	uint64_t nowPos64;
-
 	uint32_t matchPriceCount;
 	uint32_t alignPriceCount;
 	uint32_t distTableSize;
 	uint32_t dictSize;
 	int result;
-
 	__LZMA_CRangeEnc rc;
 	__LZMA_CMatchFinder matchFinderBase;
 	__LZMA_COptimal opt[__LZMA_kNumOpts];
-
 	uint32_t ProbPrices[__LZMA_kBitModelTotal >> __LZMA_kNumMoveReducingBits];
 	uint32_t matches[__LZMA_MATCH_LEN_MAX * 2 + 2 + 1];
 	uint32_t posSlotPrices[__LZMA_kNumLenToPosStates][__LZMA_kDistTableSizeMax];
@@ -381,7 +367,6 @@ typedef struct {
 	uint16_t posSlotEncoder[__LZMA_kNumLenToPosStates][1 << __LZMA_kNumPosSlotBits];
 	uint16_t posEncoders[__LZMA_kNumFullDistances - __LZMA_kEndPosModelIndex];
 	uint16_t posAlignEncoder[1 << __LZMA_kNumAlignBits];
-
 	__LZMA_CLenPriceEnc lenEnc;
 	__LZMA_CLenPriceEnc repLenEnc;
 	__LZMA_CSaveState saveState;
@@ -407,16 +392,14 @@ static void __LZMA_MatchFinder_SetDefaultSettings(__LZMA_CMatchFinder *p) {
 }
 
 static void __LZMA_MatchFinder_Construct(__LZMA_CMatchFinder *p) {
-	uint32_t i;
 	p->bufferBase = NULL;
 	p->directInput = 0;
 	p->hash = NULL;
 	__LZMA_MatchFinder_SetDefaultSettings(p);
-	for (i = 0; i < 256; i++)
+	for (uint32_t i = 0; i < 256; i++)
 	{
 		uint32_t r = i;
-		unsigned j;
-		for (j = 0; j < 8; j++) r = (r >> 1) ^ (__LZMA_kCrcPoly & ~((r & 1) - 1));
+		for (unsigned j = 0; j < 8; j++) r = (r >> 1) ^ (__LZMA_kCrcPoly & ~((r & 1) - 1));
 		p->crc[i] = r;
 	}
 }
@@ -2497,30 +2480,16 @@ NS_INLINE NSData * NSDataGetLzmaCompressDataWithRatio(NSData * dataToCompress, c
 #endif
 
 	if ([dataToCompress length] == 0) return nil;
-
 	uint32_t outSize = (uint32_t)(((size_t)[dataToCompress length] / 20) * 21) + (1 << 16);
 	if (outSize == 0) return nil;
-
 	size_t destLen = outSize;
 	outSize += (__LZMA_PROPS_SIZE + sizeof(uint32_t));
 	uint8_t * compressedBuffer = (uint8_t *)malloc(outSize);
 	if (!compressedBuffer) return nil;
-
 	int level = 0;
-	if (compressionRatio < 0.0f)
-	{
-		level = 0;
-	}
-	else if (compressionRatio > 1.0f)
-	{
-		level = 9;
-	}
-	else
-	{
-		level = (int)(compressionRatio * 9.0f);
-	}
-
-
+	if (compressionRatio < 0.0f) level = 0;
+	else if (compressionRatio > 1.0f) level = 9;
+	else level = (int)(compressionRatio * 9.0f);
 	uint8_t * sizePtr = (uint8_t *)compressedBuffer;
 	uint8_t * props = sizePtr + sizeof(uint32_t);
 	uint8_t * dest = props + __LZMA_PROPS_SIZE;
@@ -2544,7 +2513,7 @@ NS_INLINE NSData * NSDataGetLzmaCompressDataWithRatio(NSData * dataToCompress, c
 		*int32Ptr = (uint32_t)[dataToCompress length];
 		NSData * d = [NSData dataWithBytesNoCopy:compressedBuffer
 										  length:(uint32_t)destLen + __LZMA_PROPS_SIZE + sizeof(uint32_t)
-							  freeWhenDone:YES];
+									freeWhenDone:YES];
 		if (d) return d;
 	}
 	free(compressedBuffer);
@@ -2593,12 +2562,11 @@ typedef struct {
 
 static int __LZMA_LzmaProps_Decode(__LZMA_CLzmaProps *p, const uint8_t *data, unsigned size) {
 	uint32_t dicSize;
-	uint8_t d;
 	if (size < __LZMA_PROPS_SIZE) return __LZMA_SZ_ERROR_UNSUPPORTED;
 	else dicSize = data[1] | ((uint32_t)data[2] << 8) | ((uint32_t)data[3] << 16) | ((uint32_t)data[4] << 24);
 	if (dicSize < __LZMA_DIC_MIN) dicSize = __LZMA_DIC_MIN;
 	p->dicSize = dicSize;
-	d = data[0];
+	uint8_t d = data[0];
 	if (d >= (9 * 5 * 5)) return __LZMA_SZ_ERROR_UNSUPPORTED;
 	p->lc = d % 9;
 	d /= 9;
@@ -2608,8 +2576,7 @@ static int __LZMA_LzmaProps_Decode(__LZMA_CLzmaProps *p, const uint8_t *data, un
 }
 
 static void __LZMA_LzmaDec_FreeProbs(__LZMA_CLzmaDec *p, __LZMA_ISzAlloc *alloc) {
-	alloc->Free(alloc, p->probs);
-	p->probs = NULL;
+	alloc->Free(alloc, p->probs); p->probs = NULL;
 }
 
 static int __LZMA_LzmaDec_AllocateProbs2(__LZMA_CLzmaDec *p, const __LZMA_CLzmaProps *propNew, __LZMA_ISzAlloc *alloc) {
@@ -2700,8 +2667,6 @@ typedef enum {
 #define __LZMA_GET_BIT_CHECK(p, i) __LZMA_GET_BIT2_CHECK(p, i, ; , ;)
 #define __LZMA_TREE_DECODE_CHECK(probs, limit, i) \
 { i = 1; do { __LZMA_GET_BIT_CHECK(probs + i, i) } while (i < limit); i -= limit; }
-
-#define __LZMA_kNumLitStates 7
 
 static __LZMA_ELzmaDummy __LZMA_LzmaDec_TryDummy(const __LZMA_CLzmaDec *p, const uint8_t *buf, size_t inSize) {
 	uint32_t range = p->range;
@@ -3379,15 +3344,12 @@ NS_INLINE NSData * NSDataGetLzmaDecompressData(NSData * lzmaData)
 #endif
 	const NSUInteger lzmaDataLen = [lzmaData length];
 	if (lzmaDataLen < (sizeof(uint32_t) + __LZMA_PROPS_SIZE)) return nil;
-
 	uint8_t * sizePtr = (uint8_t *)[lzmaData bytes];
 	uint8_t * props = sizePtr + sizeof(uint32_t);
 	uint8_t * inBuff = props + __LZMA_PROPS_SIZE;
-
 	uint32_t * int32Ptr = (uint32_t *)sizePtr;
 	uint8_t * unCompressedBuffer = (uint8_t *)malloc((*int32Ptr));
 	if (!unCompressedBuffer) return nil;
-
 	size_t dstLen = *int32Ptr;
 	size_t srcLen = [lzmaData length] - __LZMA_PROPS_SIZE - sizeof(uint32_t);
 	int res = __LZMA_LzmaUncompress((uint8_t *)unCompressedBuffer,
