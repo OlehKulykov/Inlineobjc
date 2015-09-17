@@ -239,8 +239,6 @@ typedef struct {
 	int res;
 } __LZMA_CRangeEnc;
 
-typedef uint32_t __LZMA_CLzRef;
-
 typedef struct {
 	int (*Read)(void *p, void *buf, size_t *size);
 } __LZMA_ISeqInStream;
@@ -258,8 +256,8 @@ typedef struct {
 	uint8_t bigHash;
 	uint8_t directInput;
 	uint32_t matchMaxLen;
-	__LZMA_CLzRef *hash;
-	__LZMA_CLzRef *son;
+	uint32_t *hash;
+	uint32_t *son;
 	uint32_t hashMask;
 	uint32_t cutValue;
 	uint8_t *bufferBase;
@@ -596,10 +594,10 @@ static int __LZMA_LzInWindow_Create(__LZMA_CMatchFinder *p, uint32_t keepSizeRes
 	return (p->bufferBase != NULL);
 }
 
-static __LZMA_CLzRef* __LZMA_AllocRefs(size_t num, __LZMA_ISzAlloc *alloc) {
-	size_t sizeInBytes = (size_t)num * sizeof(__LZMA_CLzRef);
-	if (sizeInBytes / sizeof(__LZMA_CLzRef) != num) return NULL;
-	return (__LZMA_CLzRef *)alloc->Alloc(alloc, sizeInBytes);
+static uint32_t* __LZMA_AllocRefs(size_t num, __LZMA_ISzAlloc *alloc) {
+	size_t sizeInBytes = (size_t)num * sizeof(uint32_t);
+	if (sizeInBytes / sizeof(uint32_t) != num) return NULL;
+	return (uint32_t *)alloc->Alloc(alloc, sizeInBytes);
 }
 
 static int __LZMA_MatchFinder_Create(__LZMA_CMatchFinder *p, uint32_t historySize,
@@ -757,7 +755,7 @@ maxLen = (uint32_t)(c - cur); }
 
 static uint32_t __LZMA_MatchFinder_GetSubValue(__LZMA_CMatchFinder *p) { return (p->pos - p->historySize - 1) & __LZMA_kNormalizeMask; }
 
-static void __LZMA_MatchFinder_Normalize3(uint32_t subValue, __LZMA_CLzRef *items, size_t numItems) {
+static void __LZMA_MatchFinder_Normalize3(uint32_t subValue, uint32_t *items, size_t numItems) {
 	for (size_t i = 0; i < numItems; i++) {
 		uint32_t value = items[i];
 		if (value <= subValue) value = __LZMA_kEmptyHashValue;
@@ -804,7 +802,7 @@ static void __LZMA_MatchFinder_CheckLimits(__LZMA_CMatchFinder *p) {
 
 #define __LZMA_MOVE_POS_RET __LZMA_MOVE_POS return offset;
 
-static uint32_t * __LZMA_Hc_GetMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, __LZMA_CLzRef *son,
+static uint32_t * __LZMA_Hc_GetMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, uint32_t *son,
 										   uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue,
 										   uint32_t *distances, uint32_t maxLen) {
 	son[_cyclicBufferPos] = curMatch;
@@ -889,11 +887,11 @@ static void __LZMA_Hc4_MatchFinder_Skip(__LZMA_CMatchFinder *p, uint32_t num) {
 	while (--num != 0);
 }
 
-static uint32_t * __LZMA_GetMatchesSpec1(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, __LZMA_CLzRef *son,
+static uint32_t * __LZMA_GetMatchesSpec1(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, uint32_t *son,
 										 uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue,
 										 uint32_t *distances, uint32_t maxLen) {
-	__LZMA_CLzRef *ptr0 = son + (_cyclicBufferPos << 1) + 1;
-	__LZMA_CLzRef *ptr1 = son + (_cyclicBufferPos << 1);
+	uint32_t *ptr0 = son + (_cyclicBufferPos << 1) + 1;
+	uint32_t *ptr1 = son + (_cyclicBufferPos << 1);
 	uint32_t len0 = 0, len1 = 0;
 	for (;;) {
 		uint32_t delta = pos - curMatch;
@@ -903,7 +901,7 @@ static uint32_t * __LZMA_GetMatchesSpec1(uint32_t lenLimit, uint32_t curMatch, u
 			return distances;
 		}
 		{
-			__LZMA_CLzRef *pair = son + ((_cyclicBufferPos - delta + ((delta > _cyclicBufferPos) ? _cyclicBufferSize : 0)) << 1);
+			uint32_t *pair = son + ((_cyclicBufferPos - delta + ((delta > _cyclicBufferPos) ? _cyclicBufferSize : 0)) << 1);
 			const uint8_t *pb = cur - delta;
 			uint32_t len = (len0 < len1 ? len0 : len1);
 			if (pb[len] == cur[len])
@@ -956,10 +954,10 @@ static uint32_t __LZMA_Bt2_MatchFinder_GetMatches(__LZMA_CMatchFinder *p, uint32
 	__LZMA_GET_MATCHES_FOOTER(offset, 1)
 }
 
-static void __LZMA_SkipMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, __LZMA_CLzRef *son,
+static void __LZMA_SkipMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_t pos, const uint8_t *cur, uint32_t *son,
 								   uint32_t _cyclicBufferPos, uint32_t _cyclicBufferSize, uint32_t cutValue) {
-	__LZMA_CLzRef *ptr0 = son + (_cyclicBufferPos << 1) + 1;
-	__LZMA_CLzRef *ptr1 = son + (_cyclicBufferPos << 1);
+	uint32_t *ptr0 = son + (_cyclicBufferPos << 1) + 1;
+	uint32_t *ptr1 = son + (_cyclicBufferPos << 1);
 	uint32_t len0 = 0, len1 = 0;
 	for (;;) {
 		uint32_t delta = pos - curMatch;
@@ -969,7 +967,7 @@ static void __LZMA_SkipMatchesSpec(uint32_t lenLimit, uint32_t curMatch, uint32_
 			return;
 		}
 		{
-			__LZMA_CLzRef *pair = son + ((_cyclicBufferPos - delta + ((delta > _cyclicBufferPos) ? _cyclicBufferSize : 0)) << 1);
+			uint32_t *pair = son + ((_cyclicBufferPos - delta + ((delta > _cyclicBufferPos) ? _cyclicBufferSize : 0)) << 1);
 			const uint8_t *pb = cur - delta;
 			uint32_t len = (len0 < len1 ? len0 : len1);
 			if (pb[len] == cur[len])
