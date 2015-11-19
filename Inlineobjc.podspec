@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 # Common settings
   s.name         = "Inlineobjc"
-  s.version      = "0.1.13"
+  s.version      = "0.1.14"
   s.summary      = "Inline Objective-C small functions for more stable and safer code"
   s.description  = <<-DESC
 Inline Objective-C small functions for more stable and safer code. Few usefull daily functions.
