@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 # Common settings
   s.name         = "Inlineobjc"
-  s.version      = "0.1.14"
+  s.version      = "0.1.15"
   s.summary      = "Inline Objective-C small functions for more stable and safer code"
   s.description  = <<-DESC
 Inline Objective-C small functions for more stable and safer code. Few usefull daily functions.
@@ -13,7 +13,10 @@ Inline Objective-C small functions for more stable and safer code. Few usefull d
   s.source       = { :git => 'https://github.com/OlehKulykov/Inlineobjc.git', :tag => s.version.to_s, :submodules => "true" }
 
 # Platforms
-  s.platform     = :ios, '7.0'
+  s.ios.deployment_target = "7.0"
+  s.osx.deployment_target = "10.7"
+  s.watchos.deployment_target = '2.0'
+  s.tvos.deployment_target = '9.0'
 
 # Build  
   s.source_files = '*.h'
