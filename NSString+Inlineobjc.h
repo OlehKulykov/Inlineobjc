@@ -155,10 +155,16 @@ NS_INLINE BOOL NSStringsAreEqual(NSString * string1, NSString * string2)
  */
 NS_INLINE BOOL NSStringIsUppercase(NSString * string)
 {
-#if defined(DEBUG)
 	if (string)
 	{
+#if defined(DEBUG)
 		assert([string isKindOfClass:[NSString class]]);
+#endif
+		// terrible check, but works with non ascii characters
+		if ([string length]) return [string isEqualToString:[string uppercaseStringWithLocale:[NSLocale currentLocale]]];
+	}
+	return NO;
+
 //		assert(sizeof(wchar_t) == 4);
 //		const wchar_t * wstr = (const wchar_t *)[string cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];
 //		if (wstr)
@@ -166,12 +172,6 @@ NS_INLINE BOOL NSStringIsUppercase(NSString * string)
 //			while (*wstr) if (iswlower(*wstr)) return NO;
 //			return YES;
 //		}
-
-		// terrible check, but works with non ascii characters
-		if ([string length]) return [string isEqualToString:[string uppercaseStringWithLocale:[NSLocale currentLocale]]];
-	}
-	return NO;
-#endif
 }
 
 
@@ -182,16 +182,15 @@ NS_INLINE BOOL NSStringIsUppercase(NSString * string)
  */
 NS_INLINE BOOL NSStringIsLowercase(NSString * string)
 {
-#if defined(DEBUG)
 	if (string)
 	{
+#if defined(DEBUG)
 		assert([string isKindOfClass:[NSString class]]);
-
+#endif
 		// terrible check, but works with non ascii characters
 		if ([string length]) return [string isEqualToString:[string lowercaseStringWithLocale:[NSLocale currentLocale]]];
 	}
 	return NO;
-#endif
 }
 
 #endif
