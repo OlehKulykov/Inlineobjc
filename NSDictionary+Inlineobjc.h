@@ -24,6 +24,9 @@
 #import <Foundation/Foundation.h>
 
 
+#ifndef __NSDICTIONARY_INLINEOBJC_H__
+#define __NSDICTIONARY_INLINEOBJC_H__ 1
+
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
 #define DEBUG 1
@@ -99,3 +102,4 @@ NS_INLINE NSDictionary * NSDictionaryCreateWithPropertyListData(NSData * plistDa
 	return nil;
 }
 
+#endif

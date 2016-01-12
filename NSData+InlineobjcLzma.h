@@ -23,6 +23,9 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef __NSDATA_INLINEOBJCLZMA_H__
+#define __NSDATA_INLINEOBJCLZMA_H__ 1
+
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
 #define DEBUG 1
@@ -3351,4 +3354,6 @@ NS_INLINE NSData * NSDataGetLzmaDecompressData(NSData * lzmaData)
 	free(unCompressedBuffer);
 	return nil;
 }
+
+#endif
 

@@ -26,6 +26,9 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 
+#ifndef __UIIMAGE_INLINEOBJC_H__
+#define __UIIMAGE_INLINEOBJC_H__ 1
+
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
 #define DEBUG 1
@@ -72,4 +75,6 @@ NS_INLINE UIImage * UIImageCreateWithColorAndSize(UIColor * color, const CGSize 
 {
 	return UIImageCreateWithColorSizeAndOpaqueness(color, size, YES);
 }
+
+#endif
 

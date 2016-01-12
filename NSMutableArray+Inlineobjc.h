@@ -24,6 +24,9 @@
 #import <Foundation/Foundation.h>
 
 
+#ifndef __NSMUTABLEARRAY_INLINEOBJC_H__
+#define __NSMUTABLEARRAY_INLINEOBJC_H__ 1
+
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
 #define DEBUG 1
@@ -170,4 +173,6 @@ NS_INLINE void NSMutableArrayPrependSafe(NSMutableArray * array, id<NSFastEnumer
 		for (id object in from) [array insertObject:object atIndex:0];
 	}
 }
+
+#endif
 

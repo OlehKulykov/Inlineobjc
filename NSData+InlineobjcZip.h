@@ -24,6 +24,9 @@
 #import <Foundation/Foundation.h>
 #include <zlib.h>
 
+#ifndef __NSDATA_INLINEOBJCZIP_H__
+#define __NSDATA_INLINEOBJCZIP_H__ 1
+
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
 #define DEBUG 1
@@ -190,4 +193,6 @@ NS_INLINE NSData * NSDataGetZipDecompressData(NSData * zipData)
 
 	return nil;
 }
+
+#endif
 

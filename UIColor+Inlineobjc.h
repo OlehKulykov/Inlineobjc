@@ -25,6 +25,8 @@
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+#ifndef __UICOLOR_INLINEOBJC_H__
+#define __UICOLOR_INLINEOBJC_H__ 1
 
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
@@ -246,4 +248,6 @@ NS_INLINE UIColor * UIColorMakeWithHexString(NSString * hexString)
 	}
 	return nil;
 }
+
+#endif
 

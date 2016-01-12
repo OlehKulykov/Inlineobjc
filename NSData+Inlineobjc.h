@@ -21,6 +21,11 @@
  */
 
 
+#ifndef __NSDATA_INLINEOBJC_H__
+#define __NSDATA_INLINEOBJC_H__ 1
+
 #import "NSData+InlineobjcZip.h"
 //#import "NSData+InlineobjcLzma.h"
+
+#endif
 

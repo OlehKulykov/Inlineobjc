@@ -23,6 +23,8 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef __NSARRAY_INLINEOBJC_H__
+#define __NSARRAY_INLINEOBJC_H__ 1
 
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef DEBUG
@@ -168,4 +170,6 @@ NS_INLINE NSArray * NSArrayDeserializeFromBinaryData(NSData * binaryData)
 	}
 	return nil;
 }
+
+#endif
 
