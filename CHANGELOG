@@ -1,35 +1,35 @@
-1.0.1
+Changes on version 1.0.1 (current):
 - Move to root tests XCode project.
 
-1.0.0
+Changes on version 1.0.0:
 - Stable release.
 
-0.1.17
+Changes on version 0.1.17:
 - NSString check lower and upper case debug fix.
 
-0.1.16
+Changes on version 0.1.16:
 - Wrap all headers with preprocessor defines.
 
-0.1.14
+Changes on version 0.1.14:
 - NSObject dynamic properties.
 
-0.1.12
+Changes on version 0.1.12:
 - NSData serialise and deserialise with binary data.
 
-0.1.11
+Changes on version 0.1.11:
 - NSMutableArray safe append and prepend functionality.
 
-0.1.10
+Changes on version 0.1.10:
 - NSData lzma compression/decompression.
 
-0.1.6
+Changes on version 0.1.6:
 - NSData zip compression/decompression.
 
-0.1.2
+Changes on version 0.1.2:
 - Additional import of the standart frameworks.
 
-0.1.1
+Changes on version 0.1.1:
 - NSData base functions.
 
-0.1.0 
+Changes on version 0.1.0:
 - Initial release.
