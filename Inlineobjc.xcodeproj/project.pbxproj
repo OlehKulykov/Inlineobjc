@@ -35,21 +35,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D12E2EA1BA9328700B34ABF /* NSData+InlineobjcLzma.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+InlineobjcLzma.h"; path = "../../NSData+InlineobjcLzma.h"; sourceTree = "<group>"; };
-		3D1588061B733EC700C659DA /* NSMutableArray+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+Inlineobjc.h"; path = "../../NSMutableArray+Inlineobjc.h"; sourceTree = "<group>"; };
-		3D1588071B73583D00C659DA /* NSString+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSString+Inlineobjc.h"; path = "../../NSString+Inlineobjc.h"; sourceTree = "<group>"; };
+		3D071F131C462C6A007AC0BC /* NSArray+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F141C462C6A007AC0BC /* NSCategoryDynamicProperties+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSCategoryDynamicProperties+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F151C462C6A007AC0BC /* NSData+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F161C462C6A007AC0BC /* NSData+InlineobjcLzma.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+InlineobjcLzma.h"; sourceTree = SOURCE_ROOT; };
+		3D071F171C462C6A007AC0BC /* NSData+InlineobjcZip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+InlineobjcZip.h"; sourceTree = SOURCE_ROOT; };
+		3D071F181C462C6A007AC0BC /* NSDictionary+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F191C462C6A007AC0BC /* NSMutableArray+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F1A1C462C6A007AC0BC /* NSString+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F1B1C462C6A007AC0BC /* UIColor+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
+		3D071F1C1C462C6A007AC0BC /* UIImage+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
 		3D1588081B7358E900C659DA /* NSString+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D15880A1B735E6100C659DA /* UIImage+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIImage+Inlineobjc.h"; path = "../../UIImage+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D15880B1B735EB000C659DA /* UIImage+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D15880D1B7362B200C659DA /* NSDictionary+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+Inlineobjc.h"; path = "../../NSDictionary+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D15880E1B73637400C659DA /* NSDictionary+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D1588101B7366F900C659DA /* NSData+InlineobjcZip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+InlineobjcZip.h"; path = "../../NSData+InlineobjcZip.h"; sourceTree = "<group>"; };
 		3D1588111B73679A00C659DA /* NSData+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D1588131B7367C700C659DA /* NSData+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSData+Inlineobjc.h"; path = "../../NSData+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D1588141B736A6600C659DA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		3D1588161B736F0200C659DA /* UIColor+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+Inlineobjc.h"; path = "../../UIColor+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D1588171B736FF000C659DA /* UIColor+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Inlineobjc.m"; sourceTree = "<group>"; };
-		3D15881C1B739A9700C659DA /* NSArray+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSArray+Inlineobjc.h"; path = "../../NSArray+Inlineobjc.h"; sourceTree = "<group>"; };
 		3D15881D1B739BC400C659DA /* NSArray+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Inlineobjc.m"; sourceTree = "<group>"; };
 		3D1FB8781B6B8E27005AE804 /* Inlineobjc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inlineobjc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1FB87C1B6B8E27005AE804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -157,15 +158,16 @@
 		3D1FB8A21B6B8F26005AE804 /* Header */ = {
 			isa = PBXGroup;
 			children = (
-				3D15881C1B739A9700C659DA /* NSArray+Inlineobjc.h */,
-				3D1588161B736F0200C659DA /* UIColor+Inlineobjc.h */,
-				3D1588101B7366F900C659DA /* NSData+InlineobjcZip.h */,
-				3D12E2EA1BA9328700B34ABF /* NSData+InlineobjcLzma.h */,
-				3D1588131B7367C700C659DA /* NSData+Inlineobjc.h */,
-				3D15880D1B7362B200C659DA /* NSDictionary+Inlineobjc.h */,
-				3D15880A1B735E6100C659DA /* UIImage+Inlineobjc.h */,
-				3D1588071B73583D00C659DA /* NSString+Inlineobjc.h */,
-				3D1588061B733EC700C659DA /* NSMutableArray+Inlineobjc.h */,
+				3D071F131C462C6A007AC0BC /* NSArray+Inlineobjc.h */,
+				3D071F141C462C6A007AC0BC /* NSCategoryDynamicProperties+Inlineobjc.h */,
+				3D071F151C462C6A007AC0BC /* NSData+Inlineobjc.h */,
+				3D071F161C462C6A007AC0BC /* NSData+InlineobjcLzma.h */,
+				3D071F171C462C6A007AC0BC /* NSData+InlineobjcZip.h */,
+				3D071F181C462C6A007AC0BC /* NSDictionary+Inlineobjc.h */,
+				3D071F191C462C6A007AC0BC /* NSMutableArray+Inlineobjc.h */,
+				3D071F1A1C462C6A007AC0BC /* NSString+Inlineobjc.h */,
+				3D071F1B1C462C6A007AC0BC /* UIColor+Inlineobjc.h */,
+				3D071F1C1C462C6A007AC0BC /* UIImage+Inlineobjc.h */,
 			);
 			name = Header;
 			sourceTree = "<group>";
