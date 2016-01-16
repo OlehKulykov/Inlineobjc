@@ -171,5 +171,54 @@ NS_INLINE NSArray * NSArrayDeserializeFromBinaryData(NSData * binaryData)
 	return nil;
 }
 
+
+/**
+ @brief Get array next index from started index.
+ @param array The target array.
+ @param index Started index.
+ @return Next array index from started or NSNotFound on error.
+ */
+NS_INLINE NSUInteger NSArrayNextIndexFrom(NSArray * array, const NSUInteger index)
+{
+	if (array)
+	{
+#if defined(DEBUG)
+		assert([array isKindOfClass:[NSArray class]]);
+#endif
+		const NSUInteger nextIndex = index + 1;
+		if (nextIndex < [array count])
+		{
+			return nextIndex;
+		}
+	}
+	return NSNotFound;
+}
+
+
+/**
+ @brief Get array previous index from started index.
+ @param array The target array.
+ @param index Started index.
+ @return Previous array index from started or NSNotFound on error.
+ */
+NS_INLINE NSUInteger NSArrayPreviousIndexFrom(NSArray * array, const NSUInteger index)
+{
+	if (array)
+	{
+#if defined(DEBUG)
+		assert([array isKindOfClass:[NSArray class]]);
+#endif
+		if (index > 0 && index < NSNotFound)
+		{
+			const NSUInteger prevIndex = index - 1;
+			if (prevIndex < [array count])
+			{
+				return prevIndex;
+			}
+		}
+	}
+	return NSNotFound;
+}
+
 #endif
 

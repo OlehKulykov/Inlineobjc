@@ -1,4 +1,7 @@
-Changes on version 1.0.1 (current):
+Changes on version 1.0.2 (current):
+- Added prev & next indexes array getters from source.
+
+Changes on version 1.0.1:
 - Move to root tests XCode project.
 
 Changes on version 1.0.0:

@@ -43,7 +43,7 @@
 	[super tearDown];
 }
 
-- (void)testExample
+- (void) testExample
 {
 	// This is an example of a functional test case.
 	XCTAssert(NSArrayIsEmpty(nil), @"ERROR NSArrayIsEmpty");
@@ -74,6 +74,33 @@
 	XCTAssert(NSArrayIndexOfObject(nil, @(0)) == NSNotFound, @"ERROR NSArrayIndexOfObject");
 	XCTAssert(NSArrayIndexOfObject(@[], nil) == NSNotFound, @"ERROR NSArrayIndexOfObject");
 	XCTAssert(NSArrayIndexOfObject(nil, nil) == NSNotFound, @"ERROR NSArrayIndexOfObject");
+}
+
+- (void) testNextIndex
+{
+	XCTAssert(NSArrayNextIndexFrom(nil, 0) == NSNotFound, @"ERROR NSArrayNextIndexFrom");
+	XCTAssert(NSArrayNextIndexFrom(@[], 0) == NSNotFound, @"ERROR NSArrayNextIndexFrom");
+	XCTAssert(NSArrayNextIndexFrom(@[], 1) == NSNotFound, @"ERROR NSArrayNextIndexFrom");
+	XCTAssert(NSArrayNextIndexFrom(@[], NSNotFound) == NSNotFound, @"ERROR NSArrayNextIndexFrom");
+
+	XCTAssert(NSArrayNextIndexFrom(@[ @1, @2, @3 ], 0) == 1, @"ERROR NSArrayNextIndexFrom");
+	XCTAssert(NSArrayNextIndexFrom(@[ @1, @2, @3 ], 1) == 2, @"ERROR NSArrayNextIndexFrom");
+	XCTAssert(NSArrayNextIndexFrom(@[ @1, @2, @3 ], 2) == NSNotFound, @"ERROR NSArrayNextIndexFrom");
+	XCTAssert(NSArrayNextIndexFrom(@[ @1, @2, @3 ], NSNotFound) == NSNotFound, @"ERROR NSArrayNextIndexFrom");
+}
+
+- (void) testPrevIndex
+{
+	XCTAssert(NSArrayPreviousIndexFrom(nil, 0) == NSNotFound, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[], 0) == NSNotFound, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[], 1) == NSNotFound, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[], NSNotFound) == NSNotFound, @"ERROR NSArrayPreviousIndexFrom");
+
+	XCTAssert(NSArrayPreviousIndexFrom(@[ @1, @2, @3 ], 0) == NSNotFound, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[ @1, @2, @3 ], 1) == 0, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[ @1, @2, @3 ], 2) == 1, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[ @1, @2, @3 ], 3) == 2, @"ERROR NSArrayPreviousIndexFrom");
+	XCTAssert(NSArrayPreviousIndexFrom(@[ @1, @2, @3 ], NSNotFound) == NSNotFound, @"ERROR NSArrayPreviousIndexFrom");
 }
 
 - (void)testPerformanceExample
