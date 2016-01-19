@@ -24,6 +24,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 #import "UIImage+Inlineobjc.h"
+#import "CGRect+Inlineobjc.h"
 
 @interface UIImage_Inlineobjc : XCTestCase
 

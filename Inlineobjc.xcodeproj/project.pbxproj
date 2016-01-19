@@ -66,6 +66,7 @@
 		3D1FB8961B6B8E27005AE804 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D1FB8971B6B8E27005AE804 /* InlineobjcTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InlineobjcTests.m; sourceTree = "<group>"; };
 		3D1FB8A31B6B9FC8005AE804 /* NSMutableArray+Inlineobjc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Inlineobjc.m"; sourceTree = "<group>"; };
+		3DCCF6841C4E833E00C89DD6 /* CGRect+Inlineobjc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CGRect+Inlineobjc.h"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +159,7 @@
 		3D1FB8A21B6B8F26005AE804 /* Header */ = {
 			isa = PBXGroup;
 			children = (
+				3DCCF6841C4E833E00C89DD6 /* CGRect+Inlineobjc.h */,
 				3D071F131C462C6A007AC0BC /* NSArray+Inlineobjc.h */,
 				3D071F141C462C6A007AC0BC /* NSCategoryDynamicProperties+Inlineobjc.h */,
 				3D071F151C462C6A007AC0BC /* NSData+Inlineobjc.h */,

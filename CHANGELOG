@@ -1,4 +1,7 @@
-Changes on version 1.0.2 (current):
+Changes on version 1.0.3 (current):
+- Add CGRect creation & modification.
+
+Changes on version 1.0.2:
 - Added prev & next indexes array getters from source.
 
 Changes on version 1.0.1:
