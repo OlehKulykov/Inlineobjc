@@ -43,7 +43,12 @@
 	[super tearDown];
 }
 
-- (void)testExample
+- (void) testPaths
+{
+	XCTAssertNotNil(NSStringGetStorageDirFullPathForClass([NSString class]), @"ERROR NSStringIsEmpty");
+}
+
+- (void) testExample
 {
 	XCTAssert(NSStringIsEmpty(nil), @"ERROR NSStringIsEmpty");
 	XCTAssert(NSStringIsEmpty(@""), @"ERROR NSStringIsEmpty");

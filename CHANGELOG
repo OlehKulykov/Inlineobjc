@@ -1,4 +1,7 @@
-Changes on version 1.0.3 (current):
+Changes on version 1.0.4 (current):
+- NSString class storage path getter and paths creator.
+
+Changes on version 1.0.3:
 - Add CGRect creation & modification.
 
 Changes on version 1.0.2:

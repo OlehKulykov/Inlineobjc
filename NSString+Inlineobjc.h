@@ -193,5 +193,56 @@ NS_INLINE BOOL NSStringIsLowercase(NSString * string)
 	return NO;
 }
 
+
+/**
+ @brief Returns current user documents path.
+ @return String with documents path.
+ */
+NS_INLINE NSString * NSStringGetUserDocumentPath(void)
+{
+	NSArray * pathsArray = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	return (pathsArray && [pathsArray count] > 0) ? [pathsArray firstObject] : nil;
+}
+
+/**
+ @brief Check path existed, readable and writable, and if not create new one.
+ @return YES - path exists and readable/writable or created, otherwice NO.
+ */
+NS_INLINE BOOL NSStringCreateFullPathIfNeeded(NSString * path)
+{
+	if (path)
+	{
+#if defined(DEBUG)
+		assert([path isKindOfClass:[NSString class]]);
+#endif
+		NSFileManager * manager = [NSFileManager defaultManager];
+		BOOL isDir = NO;
+		if ([manager fileExistsAtPath:path isDirectory:&isDir])
+		{
+			if (isDir && [manager isReadableFileAtPath:path] && [manager isWritableFileAtPath:path]) return YES;
+			[manager removeItemAtPath:path error:nil];
+		}
+		return [manager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+	}
+	return NO;
+}
+
+
+/**
+ @brief Existed path based on user document path with read/write permissions.
+ @detailed Class directory will be created.
+ @return String with existed path based on user document path with read/write permissions or nil on error.
+ */
+NS_INLINE NSString * NSStringGetStorageDirFullPathForClass(Class targetClass)
+{
+	NSString * path = targetClass ? NSStringGetUserDocumentPath() : nil;
+	if (path)
+	{
+		path = [path stringByAppendingPathComponent:NSStringFromClass(targetClass)];
+		return NSStringCreateFullPathIfNeeded(path) ? path : nil;
+	}
+	return nil;
+}
+
 #endif
 
