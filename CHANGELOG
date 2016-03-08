@@ -1,4 +1,7 @@
-Changes on version 1.0.4 (current):
+Changes on version 1.0.5 (current):
+- NSString class storage path getter and paths creator.
+
+Changes on version 1.0.4:
 - NSString class storage path getter and paths creator.
 
 Changes on version 1.0.3:

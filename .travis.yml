@@ -1,0 +1,15 @@
+language: objective-c
+
+xcode_project: Inlineobjc.xcodeproj
+xcode_scheme: Inlineobjc
+
+# current
+osx_image: xcode7.2
+xcode_sdk: iphonesimulator9.2
+
+#matrix:
+#  include:
+#    # beta
+#    - os: osx
+#      osx_image: xcode7.3
+#      xcode_sdk: iphonesimulator9.3
