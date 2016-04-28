@@ -1,5 +1,6 @@
-[![CocoaPods](https://img.shields.io/cocoapods/p/Inlineobjc.svg?style=flat)](https://cocoapods.org/pods/Inlineobjc)
-[![CocoaPods](https://img.shields.io/cocoapods/v/Inlineobjc.svg?style=flat)](https://cocoapods.org/pods/Inlineobjc)
+[![Platform](https://img.shields.io/cocoapods/p/Inlineobjc.svg?style=flat)](http://cocoapods.org/pods/Inlineobjc)
+[![Version](https://img.shields.io/cocoapods/v/Inlineobjc.svg?style=flat)](http://cocoapods.org/pods/Inlineobjc)
+[![License](https://img.shields.io/cocoapods/l/Inlineobjc.svg?style=flat)](http://cocoapods.org/pods/Inlineobjc)
 [![Build Status](https://travis-ci.org/OlehKulykov/Inlineobjc.svg?branch=master)](https://travis-ci.org/OlehKulykov/Inlineobjc)
 
 
